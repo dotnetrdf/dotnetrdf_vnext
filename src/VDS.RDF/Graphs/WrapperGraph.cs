@@ -26,13 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-#if !NO_DATA
-using System.Data;
-#endif
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
-using System.Xml.Serialization;
 using VDS.RDF.Namespaces;
 using VDS.RDF.Nodes;
 
@@ -41,14 +36,8 @@ namespace VDS.RDF.Graphs
     /// <summary>
     /// Abstract decorator for Graphs to make it easier to layer functionality on top of existing implementations
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable, XmlRoot(ElementName="graph")]
-#endif
     public abstract class WrapperGraph 
         : IEventedGraph
-#if !SILVERLIGHT
-        , ISerializable
-#endif
     {
         /// <summary>
         /// Underlying Graph this is a wrapper around
@@ -74,25 +63,6 @@ namespace VDS.RDF.Graphs
             this._changedHandler = this.HandleCollectionChanged;
             this.AttachEventHandlers();
         }      
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected WrapperGraph(SerializationInfo info, StreamingContext context)
-            : this() 
-        {
-            String graphType = info.GetString("graphType");
-            Type t = Type.GetType(graphType);
-            if (t == null) throw new ArgumentException("Invalid serialization information, graph type '" + graphType + "' is not available in your environment");
-            this._g = (IGraph)info.GetValue("innerGraph", t);
-            this.AttachEventHandlers();
-        }
-
-#endif
 
         /// <summary>
         /// Gets the number of triples in the graph
@@ -361,19 +331,6 @@ namespace VDS.RDF.Graphs
             return ReferenceEquals(this, obj);
         }
 
-#if !NO_DATA
-
-        /// <summary>
-        /// Converts the wrapped graph into a DataTable
-        /// </summary>
-        /// <returns></returns>
-        public virtual DataTable ToDataTable()
-        {
-            return this._g.ToDataTable();
-        }
-
-#endif
-
         /// <summary>
         /// Event which is raised when the graph changes
         /// </summary>
@@ -425,75 +382,6 @@ namespace VDS.RDF.Graphs
             this._g.Dispose();
         }
 
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Gets the Serialization Information
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("graphType", this._g.GetType().AssemblyQualifiedName);
-            info.AddValue("innerGraph", this._g, typeof(IGraph));
-        }
-
-        /// <summary>
-        /// Gets the Schema for XML serialization
-        /// </summary>
-        /// <returns></returns>
-        public virtual XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public virtual void ReadXml(XmlReader reader)
-        {
-            if (reader.MoveToAttribute("graphType"))
-            {
-                String graphType = reader.Value;
-                Type t = Type.GetType(graphType);
-                if (t == null) throw new RdfException("Invalid graphType attribute, the type '" + graphType + "' is not available in your environment");
-                reader.MoveToElement();
-
-                XmlSerializer graphDeserializer = new XmlSerializer(t);
-                reader.Read();
-                if (reader.Name.Equals("innerGraph"))
-                {
-                    reader.Read();
-                    Object temp = graphDeserializer.Deserialize(reader);
-                    this._g.Assert(((IGraph)temp).Triples);
-                    reader.Read();
-                }
-                else
-                {
-                    throw new RdfException("Expected a <graph> element inside a <graph> element");
-                }
-            }
-            else
-            {
-                throw new RdfException("Missing graphType attribute on the <graph> element");
-            }
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public virtual void WriteXml(XmlWriter writer)
-        {
-            XmlSerializer graphSerializer = new XmlSerializer(this._g.GetType());
-            writer.WriteAttributeString("graphType", this._g.GetType().AssemblyQualifiedName);
-            writer.WriteStartElement("innerGraph");
-            graphSerializer.Serialize(writer, this._g);
-            writer.WriteEndElement();
-        }
-
-#endif
     }
 }
 
