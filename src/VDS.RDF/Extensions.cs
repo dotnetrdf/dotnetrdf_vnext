@@ -39,7 +39,7 @@ namespace VDS.RDF
     /// </summary>
     public static class Extensions
     {
-        private static SHA256Managed _sha256;
+        private static SHA256 _sha256;
 
         #region Enumerable Extensions
 
@@ -201,7 +201,7 @@ namespace VDS.RDF
             if (u == null) throw new ArgumentNullException("u");
 
             //Only instantiate the SHA256 class when we first use it
-            if (_sha256 == null) _sha256 = new SHA256Managed();
+            if (_sha256 == null) _sha256 = SHA256.Create();
 
             Byte[] input = Encoding.UTF8.GetBytes(u.AbsoluteUri);
             Byte[] output = _sha256.ComputeHash(input);
@@ -225,7 +225,7 @@ namespace VDS.RDF
             if (s == null) throw new ArgumentNullException("s");
 
             //Only instantiate the SHA256 class when we first use it
-            if (_sha256 == null) _sha256 = new SHA256Managed();
+            if (_sha256 == null) _sha256 = SHA256.Create();
 
             Byte[] input = Encoding.UTF8.GetBytes(s);
             Byte[] output = _sha256.ComputeHash(input);

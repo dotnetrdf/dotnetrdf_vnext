@@ -24,18 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Runtime.Serialization;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace VDS.RDF.Nodes
 {
     /// <summary>
     /// Abstract Base Class for Variable Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="variable")]
-#endif
     public abstract class BaseVariableNode
         : BaseNode, IEquatable<BaseVariableNode>, IComparable<BaseVariableNode>, IValuedNode
     {
@@ -57,28 +52,6 @@ namespace VDS.RDF.Nodes
             }
             this._hashcode = Tools.CreateHashCode(this);
         }
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Deserialization Only Constructor
-        /// </summary>
-        protected BaseVariableNode()
-            : base(NodeType.Variable) { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseVariableNode(SerializationInfo info, StreamingContext context)
-            : base(NodeType.Variable)
-        {
-            this.VariableName = info.GetString("name");
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-#endif
 
         /// <summary>
         /// Gets the Variable Name
@@ -168,39 +141,6 @@ namespace VDS.RDF.Nodes
         {
             return this.CompareTo((INode)other);
         }
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Gets the data for serialization
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("name", this.VariableName);
-        }
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public sealed override void ReadXml(XmlReader reader)
-        {
-            this.VariableName = reader.ReadElementContentAsString();
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public sealed override void WriteXml(XmlWriter writer)
-        {
-            writer.WriteValue(this.VariableName);
-        }
-
-#endif
 
         #region IValuedNode Members
 
@@ -310,12 +250,6 @@ namespace VDS.RDF.Nodes
         #endregion
     }
 
-    /// <summary>
-    /// Class representing Variable Nodes (only used for N3)
-    /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="variable")]
-#endif
     public class VariableNode
         : BaseVariableNode, IEquatable<VariableNode>, IComparable<VariableNode>
     {
@@ -326,22 +260,6 @@ namespace VDS.RDF.Nodes
         /// <param name="varname">Variable Name</param>
         public VariableNode(String varname)
             : base(varname) { }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserialization Only Constructor
-        /// </summary>
-        protected VariableNode()
-            : base() { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected VariableNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
 
         /// <summary>
         /// Compares this Node to another Variable Node
