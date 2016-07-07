@@ -25,10 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
-#if !NO_DATA
-using System.Data;
-#endif
-using System.Xml.Serialization;
 using VDS.RDF.Namespaces;
 using VDS.RDF.Nodes;
 
@@ -44,9 +40,6 @@ namespace VDS.RDF.Graphs
     /// </remarks>
     public interface IGraph 
         : INodeFactory, IDisposable
-#if !SILVERLIGHT
-        , IXmlSerializable
-#endif
     {
         /// <summary>
         /// Gets the number of triples in the graph
@@ -159,17 +152,5 @@ namespace VDS.RDF.Graphs
         /// <returns></returns>
         bool ContainsTriple(Triple t);
 
-#if !NO_DATA
-
-        /// <summary>
-        /// Converts the Graph into a DataTable
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>
-        /// <strong>Warning:</strong> Not available under builds which remove the Data Storage layer from dotNetRDF e.g. Silverlight
-        /// </remarks>
-        DataTable ToDataTable();
-
-#endif
     }
 }

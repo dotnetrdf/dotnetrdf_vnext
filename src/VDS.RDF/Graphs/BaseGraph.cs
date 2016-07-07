@@ -27,36 +27,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using VDS.RDF.Graphs.Utilities;
-#if !NO_DATA
-using System.Data;
-#endif
 using System.Linq;
-#if !PORTABLE
-using System.Runtime.Serialization;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-#endif
 using VDS.RDF.Collections;
 using VDS.RDF.Namespaces;
 using VDS.RDF.Nodes;
-#if !SILVERLIGHT
-using VDS.RDF.Writing.Serialization;
-#endif
 
 namespace VDS.RDF.Graphs
 {
     /// <summary>
     /// Abstract Base Implementation of the <see cref="IGraph">IGraph</see> interface
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="graph")]
-#endif
     public abstract class BaseGraph 
         : NodeFactory, IEventedGraph
-#if !SILVERLIGHT
-        ,ISerializable
-#endif
     {
 
         /// <summary>
@@ -68,10 +50,6 @@ namespace VDS.RDF.Graphs
         /// </summary>
         protected readonly NamespaceMapper _nsmapper;
         private readonly NotifyCollectionChangedEventHandler _changedHandler;
-
-#if !SILVERLIGHT
-        private GraphDeserializationInfo _dsInfo;
-#endif
 
         /// <summary>
         /// Creates a new Base Graph using the given Triple Collection
@@ -93,24 +71,6 @@ namespace VDS.RDF.Graphs
         protected BaseGraph()
             : this(new TreeIndexedTripleCollection()) { }
 
-#if !SILVERLIGHT
-        /// <summary>
-        /// Creates a Graph from the given Serialization Information
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseGraph(SerializationInfo info, StreamingContext context)
-            : this()
-        {
-            this._dsInfo = new GraphDeserializationInfo(info, context);   
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            if (this._dsInfo != null) this._dsInfo.Apply(this);
-        }
-#endif
 
         /// <summary>
         /// Gets the set of Triples in this Graph
@@ -332,53 +292,6 @@ namespace VDS.RDF.Graphs
             return ReferenceEquals(this, obj);
         }
 
-#if !NO_DATA
-
-        /// <summary>
-        /// Converts a Graph into a DataTable using the explicit cast operator defined by this class
-        /// </summary>
-        /// <returns>
-        /// A DataTable containing three Columns (Subject, Predicate and Object) all typed as <see cref="INode">INode</see> with a Row per Triple
-        /// </returns>
-        /// <remarks>
-        /// <strong>Warning:</strong> Not available under builds which remove the Data Storage layer from dotNetRDF e.g. Silverlight
-        /// </remarks>
-        public virtual DataTable ToDataTable()
-        {
-            return (DataTable)this;
-        }
-
-        /// <summary>
-        /// Casts a Graph to a DataTable with all Columns typed as <see cref="INode">INode</see> (Column Names are Subject, Predicate and Object
-        /// </summary>
-        /// <param name="g">Graph to convert</param>
-        /// <returns>
-        /// A DataTable containing three Columns (Subject, Predicate and Object) all typed as <see cref="INode">INode</see> with a Row per Triple
-        /// </returns>
-        /// <remarks>
-        /// <strong>Warning:</strong> Not available under builds which remove the Data Storage layer from dotNetRDF e.g. Silverlight
-        /// </remarks>
-        public static explicit operator DataTable(BaseGraph g)
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add(new DataColumn("Subject", typeof(INode)));
-            table.Columns.Add(new DataColumn("Predicate", typeof(INode)));
-            table.Columns.Add(new DataColumn("Object", typeof(INode)));
-
-            foreach (Triple t in g.Triples)
-            {
-                DataRow row = table.NewRow();
-                row["Subject"] = t.Subject;
-                row["Predicate"] = t.Predicate;
-                row["Object"] = t.Object;
-                table.Rows.Add(row);
-            }
-
-            return table;
-        }
-
-#endif
-
         /// <summary>
         /// Gets whether the graph has events
         /// </summary>
@@ -429,116 +342,5 @@ namespace VDS.RDF.Graphs
             // We don't do anything to the triple collection because it could be bound to multiple graphs
         }
 
-#if !SILVERLIGHT
- 
-        /// <summary>
-        /// Gets the Serialization Information for serializing a Graph
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("triples", this.Triples.ToList(), typeof(List<Triple>));
-            IEnumerable<KeyValuePair<String,String>> ns = from p in this.Namespaces.Prefixes
-                                                          select new KeyValuePair<String,String>(p, this.Namespaces.GetNamespaceUri(p).AbsoluteUri);
-            info.AddValue("namespaces", ns.ToList(), typeof(List<KeyValuePair<String, String>>));
-        }
-
-        /// <summary>
-        /// Gets the Schema for XML Serialization
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public void ReadXml(XmlReader reader)
-        {
-            XmlSerializer tripleDeserializer = new XmlSerializer(typeof(Triple));
-            reader.Read();
-            if (reader.Name.Equals("namespaces"))
-            {
-                if (!reader.IsEmptyElement)
-                {
-                    reader.Read();
-                    while (reader.Name.Equals("namespace"))
-                    {
-                        if (reader.MoveToAttribute("prefix"))
-                        {
-                            String prefix = reader.Value;
-                            if (reader.MoveToAttribute("uri"))
-                            {
-                                Uri u = UriFactory.Create(reader.Value);
-                                this.Namespaces.AddNamespace(prefix, u);
-                                reader.Read();
-                            }
-                            else
-                            {
-                                throw new RdfException("Expected a uri attribute on a <namespace> element");
-                            }
-                        }
-                        else
-                        {
-                            throw new RdfException("Expected a prefix attribute on a <namespace> element");
-                        }
-                    }
-                }
-            }
-            reader.Read();
-            if (reader.Name.Equals("triples"))
-            {
-                if (!reader.IsEmptyElement)
-                {
-                    reader.Read();
-                    while (reader.Name.Equals("triple"))
-                    {
-                        Object temp = tripleDeserializer.Deserialize(reader);
-                        this.Assert((Triple)temp);
-                        reader.Read();
-                    }
-                }
-                // Attach events after deserialization completes
-                this.AttachEventHandlers();
-            }
-            else
-            {
-                throw new RdfException("Expected a <triples> element inside a <graph> element but got a <" + reader.Name + "> element instead");
-            }
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            XmlSerializer tripleSerializer = new XmlSerializer(typeof(Triple));
-
-            //Serialize Namespace Map
-            writer.WriteStartElement("namespaces");
-            foreach (String prefix in this.Namespaces.Prefixes)
-            {
-                writer.WriteStartElement("namespace");
-                writer.WriteAttributeString("prefix", prefix);
-                writer.WriteAttributeString("uri", this.Namespaces.GetNamespaceUri(prefix).AbsoluteUri);
-                writer.WriteEndElement();
-            }
-            writer.WriteEndElement();
-
-            //Serialize Triples
-            writer.WriteStartElement("triples");
-            foreach (Triple t in this.Triples)
-            {
-                tripleSerializer.Serialize(writer, t);
-            }
-            writer.WriteEndElement();
-        }
-
-#endif
     }
 }

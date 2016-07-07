@@ -25,11 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
 using VDS.RDF.Collections;
 using VDS.RDF.Query;
 
@@ -39,9 +34,6 @@ namespace VDS.RDF.Graphs
     /// Class for representing RDF Graphs
     /// </summary>
     /// <threadsafety instance="false">Safe for multi-threaded read-only access but unsafe if one/more threads may modify the Graph by using the <see cref="Graph.Assert(Triple)">Assert</see>, <see cref="Graph.Retract(Triple)">Retract</see> or <see cref="BaseGraph.Merge(IGraph)">Merge</see> methods</threadsafety>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="graph")]
-#endif
     public class Graph 
         : BaseGraph
     {
@@ -80,16 +72,6 @@ namespace VDS.RDF.Graphs
         {
             if (emptyNamespaceMap) this._nsmapper.Clear();
         }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected Graph(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
 
         #endregion
 
