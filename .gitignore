@@ -1,0 +1,9 @@
+# Build Folders
+[Bb]in/
+[Oo]bj/
+
+# VS 
+.vs/
+
+*.xproj.user
+*.lock.json
