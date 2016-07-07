@@ -24,8 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using VDS.RDF.Graphs;
 using VDS.RDF.Writing;
 using VDS.RDF.Writing.Formatting;
@@ -37,9 +35,6 @@ namespace VDS.RDF.Nodes
     /// </summary>
     public interface INode 
         : IComparable<INode>, IEquatable<INode>
-#if !SILVERLIGHT
-          ,ISerializable, IXmlSerializable
-#endif
     {
         /// <summary>
         /// Nodes have a Type

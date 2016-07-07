@@ -24,13 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Runtime.Serialization;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-#if !SILVERLIGHT
-using VDS.RDF.Writing.Serialization;
-#endif
 using VDS.RDF.Graphs;
 
 namespace VDS.RDF.Nodes
@@ -38,9 +32,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Abstract Base Class for Graph Literal Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="graphliteral")]
-#endif
     public abstract class BaseGraphLiteralNode
         : BaseNode, IEquatable<BaseGraphLiteralNode>, IComparable<BaseGraphLiteralNode>, IValuedNode
     {
@@ -64,22 +55,6 @@ namespace VDS.RDF.Nodes
         /// <param name="g">Graph this node is in</param>
         protected internal BaseGraphLiteralNode()
             : this(new Graph()) { }
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Deserializer Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseGraphLiteralNode(SerializationInfo info, StreamingContext context)
-            : base(NodeType.GraphLiteral)
-        {
-            this.SubGraph = (IGraph)info.GetValue("subgraph", typeof(Graph));
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-#endif
 
         /// <summary>
         /// Gets the Subgraph that this Node represents
@@ -195,43 +170,6 @@ namespace VDS.RDF.Nodes
             return this.CompareTo((INode)other);
         }
 
-#if !SILVERLIGHT
-        #region Serialization
-
-        /// <summary>
-        /// Gets the Serialization Information
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("subgraph", this.SubGraph);
-        }
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public sealed override void ReadXml(XmlReader reader)
-        {
-            reader.Read();
-            this.SubGraph = reader.DeserializeGraph();
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public sealed override void WriteXml(XmlWriter writer)
-        {
-            this.SubGraph.SerializeGraph(writer);
-        }
-
-        #endregion
-#endif
-
         #region IValuedNode Members
 
         /// <summary>
@@ -343,9 +281,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Class for representing Graph Literal Nodes which are supported in highly expressive RDF syntaxes like Notation 3
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="graphliteral")]
-#endif
     public class GraphLiteralNode 
         : BaseGraphLiteralNode, IEquatable<GraphLiteralNode>, IComparable<GraphLiteralNode>
     {
@@ -356,23 +291,6 @@ namespace VDS.RDF.Nodes
         /// <param name="subgraph">Sub-graph this node represents</param>
         public GraphLiteralNode(IGraph subgraph)
             : base(subgraph) { }
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Deserialization only constructor
-        /// </summary>
-        protected GraphLiteralNode()
-            : base() { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected GraphLiteralNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
 
         /// <summary>
         /// Implementation of Compare To for Graph Literal Nodes

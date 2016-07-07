@@ -24,23 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using VDS.RDF.Query;
-using VDS.RDF.Query.Expressions;
-using VDS.RDF.Nodes;
 
 namespace VDS.RDF.Nodes
 {
     /// <summary>
     /// Abstract Base Class for Blank Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="bnode")]
-#endif
     public abstract class BaseBlankNode
         : BaseNode, IEquatable<BaseBlankNode>, IComparable<BaseBlankNode>, IValuedNode
     {
@@ -56,23 +46,6 @@ namespace VDS.RDF.Nodes
             this._hashcode = Tools.CreateHashCode(this);
         }
 
-#if !SILVERLIGHT
-
-    /// <summary>
-    /// Constructor for deserialization usage only
-    /// </summary>
-        protected BaseBlankNode()
-            : base(NodeType.Blank) { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseBlankNode(SerializationInfo info, StreamingContext context)
-            : this((Guid)info.GetValue("id", typeof(Guid))) { }
-
-#endif
 
         public override Guid AnonID { get; protected set; }
 
@@ -173,48 +146,6 @@ namespace VDS.RDF.Nodes
         {
             return "_:" + this.AnonID;
         }
-
-#if !SILVERLIGHT
-
-        #region ISerializable Members
-
-        /// <summary>
-        /// Gets the data for serialization
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("id", this.AnonID);
-        }
-
-        #endregion
-
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public sealed override void ReadXml(XmlReader reader)
-        {
-            this.AnonID = new Guid(reader.ReadElementContentAsString());
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public sealed override void WriteXml(XmlWriter writer)
-        {
-            writer.WriteString(this.AnonID.ToString());
-        }
-
-        #endregion
-
-#endif
 
         #region IValuedNode Members
 
@@ -321,9 +252,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Class for representing Blank RDF Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName = "bnode")]
-#endif
     public class BlankNode
         : BaseBlankNode, IEquatable<BlankNode>, IComparable<BlankNode>
     {
@@ -335,23 +263,6 @@ namespace VDS.RDF.Nodes
             : base(id)
         {
         }
-
-#if !SILVERLIGHT
-
-    /// <summary>
-    /// Constructor for deserialization usage only
-    /// </summary>
-        protected BlankNode()
-            : base()
-        { }
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BlankNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
 
         /// <summary>
         /// Implementation of Compare To for Blank Nodes

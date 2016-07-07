@@ -24,10 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Runtime.Serialization;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
 using VDS.RDF.Specifications;
 
 namespace VDS.RDF.Nodes
@@ -35,9 +32,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Abstract Base Class for Literal Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="literal")]
-#endif
     public abstract class BaseLiteralNode 
         : BaseNode, IEquatable<BaseLiteralNode>, IComparable<BaseLiteralNode>
     {
@@ -128,47 +122,6 @@ namespace VDS.RDF.Nodes
             //Compute Hash Code
             this._hashcode = Tools.CreateHashCode(this);
         }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserialization Only Constructor
-        /// </summary>
-        protected BaseLiteralNode()
-            : base(NodeType.Literal) { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseLiteralNode(SerializationInfo info, StreamingContext context)
-            : base(NodeType.Literal)
-        {
-            this.Value = info.GetString("value");
-            byte mode = info.GetByte("mode");
-            switch (mode)
-            {
-                case 0:
-                    // If RDF 1.1 then implictly typed as xsd:string
-                    this.DataType = Options.Rdf11 ? UriFactory.Create(XmlSpecsHelper.XmlSchemaDataTypeString) : null;
-                    break;
-                case 1:
-                    // Get the Language, if RDF 1.1 then implicitly typed as rdf:langString
-                    this.Language = info.GetString("lang");
-                    if (this.Language.Equals(String.Empty)) this.Language = null;
-                    this.DataType = Options.Rdf11 ? UriFactory.Create(RdfSpecsHelper.RdfLangString) : null;
-                    break;
-                case 2:
-                    //Get the Datatype
-                    this.DataType = UriFactory.Create(info.GetString("datatype"));
-                    break;
-                default:
-                    throw new RdfException("Unable to deserialize a Literal Node");
-            }
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-#endif
 
         /// <summary>
         /// Gives the lexical value of the literal
@@ -334,95 +287,11 @@ namespace VDS.RDF.Nodes
             return this.CompareTo((INode)other);
         }
 
-#if !SILVERLIGHT
-
-        #region ISerializable Members
-
-        /// <summary>
-        /// Gets the serialization information
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("value", this.Value);
-            if (this.HasLanguage)
-            {
-                info.AddValue("mode", (byte)1);
-                info.AddValue("lang", this.Language);
-            }
-            else if (this.HasDataType)
-            {
-                info.AddValue("mode", (byte)2);
-                info.AddValue("datatype", this.DataType.AbsoluteUri);
-            }
-            else
-            {
-                info.AddValue("mode", (byte)0);
-            }
-        }
-
-        #endregion
-
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public sealed override void ReadXml(XmlReader reader)
-        {
-            if (reader.HasAttributes)
-            {
-                bool exit = false;
-                while (!exit && reader.MoveToNextAttribute())
-                {
-                    switch (reader.Name)
-                    {
-                        case "lang":
-                            this.Language = reader.Value;
-                            exit = true;
-                            break;
-                        case "datatype":
-                            this.DataType = UriFactory.Create(reader.Value);
-                            exit = true;
-                            break;
-                    }
-                }
-            }
-            reader.MoveToContent();
-            this.Value = reader.ReadElementContentAsString();
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public sealed override void WriteXml(XmlWriter writer)
-        {
-            if (this.HasLanguage)
-            {
-                writer.WriteAttributeString("lang", this.Language);
-            }
-            else if (this.HasDataType)
-            {
-                writer.WriteAttributeString("datatype", this.DataType.AbsoluteUri);
-            }
-            writer.WriteString(this.Value);
-        }
-
-        #endregion
-
-#endif
     }
 
     /// <summary>
     /// Class for representing Literal Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="literal")]
-#endif
     public class LiteralNode
         : BaseLiteralNode, IEquatable<LiteralNode>, IComparable<LiteralNode>
     {
@@ -481,22 +350,6 @@ namespace VDS.RDF.Nodes
         public LiteralNode(String literal, Uri datatype, bool normalize)
             : base(literal, null, datatype, normalize) { }
 
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserialization Only Constructor
-        /// </summary>
-        protected LiteralNode()
-            : base() { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected LiteralNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
-
         /// <summary>
         /// Implementation of Compare To for Literal Nodes
         /// </summary>
@@ -524,9 +377,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Class for representing Literal Nodes where the Literal values are not normalized
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="literal")]
-#endif
     class NonNormalizedLiteralNode 
         : LiteralNode, IComparable<NonNormalizedLiteralNode>
     {
@@ -552,22 +402,6 @@ namespace VDS.RDF.Nodes
         /// <param name="datatype">Uri for the Literals Data Type</param>
         protected internal NonNormalizedLiteralNode(String literal, Uri datatype)
             : base(literal, datatype, false) { }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserialization Only Constructor
-        /// </summary>
-        protected NonNormalizedLiteralNode()
-            : base() { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected NonNormalizedLiteralNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-#endif
 
         /// <summary>
         /// Implementation of Compare To for Literal Nodes

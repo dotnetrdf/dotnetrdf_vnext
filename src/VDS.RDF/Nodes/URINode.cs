@@ -24,18 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
-using System.Runtime.Serialization;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace VDS.RDF.Nodes
 {
     /// <summary>
     /// Abstract Base Class for URI Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="uri")]
-#endif
     public abstract class BaseUriNode
         : BaseNode, IEquatable<BaseUriNode>, IComparable<BaseUriNode>, IValuedNode
     {
@@ -52,31 +46,6 @@ namespace VDS.RDF.Nodes
             //Compute Hash Code
             this._hashcode = Tools.CreateHashCode(this);
         }
-
-#if !SILVERLIGHT
-
-    /// <summary>
-    /// Deserialization Only Constructor
-    /// </summary>
-        protected BaseUriNode()
-            : base(NodeType.Uri) { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected BaseUriNode(SerializationInfo info, StreamingContext context)
-            : base(NodeType.Uri)
-        {
-// ReSharper disable once DoNotCallOverridableMethodsInConstructor
-            this.Uri = UriFactory.Create(info.GetString("uri"));
-
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-#endif
 
         /// <summary>
         /// Gets the Uri for this Node
@@ -186,48 +155,6 @@ namespace VDS.RDF.Nodes
             return this.CompareTo((INode) other);
         }
 
-#if !SILVERLIGHT
-
-        #region ISerializable Members
-
-        /// <summary>
-        /// Gets the data for serialization
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public sealed override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("uri", this.Uri.AbsoluteUri);
-        }
-
-        #endregion
-
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public sealed override void ReadXml(XmlReader reader)
-        {
-            this.Uri = UriFactory.Create(reader.ReadElementContentAsString());
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public sealed override void WriteXml(XmlWriter writer)
-        {
-            writer.WriteString(this.Uri.AbsoluteUri);
-        }
-
-        #endregion
-
-#endif
-
         #region IValuedNode Members
 
         /// <summary>
@@ -333,9 +260,6 @@ namespace VDS.RDF.Nodes
     /// <summary>
     /// Class for representing URI Nodes
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable,XmlRoot(ElementName="uri")]
-#endif
     public class UriNode
         : BaseUriNode, IEquatable<UriNode>, IComparable<UriNode>
     {
@@ -348,23 +272,6 @@ namespace VDS.RDF.Nodes
             : base(uri)
         {
         }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Deserilization Only Constructor
-        /// </summary>
-        protected UriNode()
-            : base() { }
-
-        /// <summary>
-        /// Deserialization Constructor
-        /// </summary>
-        /// <param name="info">Serialization Information</param>
-        /// <param name="context">Streaming Context</param>
-        protected UriNode(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-
-#endif
 
         /// <summary>
         /// Implementation of Compare To for URI Nodes
