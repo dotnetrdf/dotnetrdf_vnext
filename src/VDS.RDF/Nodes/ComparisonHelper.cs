@@ -186,9 +186,9 @@ namespace VDS.RDF.Nodes
                 if (b.HasLanguage)
                 {
                     // Compare language tags if both language tagged
-                    int c = String.Compare(a.Language, b.Language, culture, comparisonOptions);
+                    int c = culture.CompareInfo.Compare(a.Language, b.Language, comparisonOptions);
                     // If different language tags return that comparison, otherwise compare by lexical value
-                    return c != 0 ? c : String.Compare(a.Value, b.Value, culture, comparisonOptions);
+                    return c != 0 ? c : culture.CompareInfo.Compare(a.Value, b.Value, comparisonOptions);
                 }
                 // Language tagged literals are greater than plain literals but less than data typed literals
                 return b.HasDataType ? -1 : 1;
@@ -201,7 +201,7 @@ namespace VDS.RDF.Nodes
             if (!a.HasDataType && !b.HasDataType)
             {
                 // Untyped and non-language tagged literals are compared by their lexical value
-                return String.Compare(a.Value, b.Value, culture, comparisonOptions);
+                return culture.CompareInfo.Compare(a.Value, b.Value, comparisonOptions);
             }
             if (!EqualityHelper.AreUrisEqual(a.DataType, b.DataType))
             {
@@ -215,7 +215,7 @@ namespace VDS.RDF.Nodes
             if (!XmlSpecsHelper.IsSupportedType(type))
             {
                 //Don't know how to order unsupported types so use specified order on the lexical value instead
-                return String.Compare(a.Value, b.Value, culture, comparisonOptions);
+                return culture.CompareInfo.Compare(a.Value, b.Value, comparisonOptions);
             }
             try
             {
@@ -556,7 +556,7 @@ namespace VDS.RDF.Nodes
 
                     default:
                         //Don't know how to order so use lexical ordering on the value
-                        return String.Compare(a.Value, b.Value, culture, comparisonOptions);
+                        return culture.CompareInfo.Compare(a.Value, b.Value, comparisonOptions);
                 }
             }
             catch
@@ -564,7 +564,7 @@ namespace VDS.RDF.Nodes
                 //There was some error suggesting a non-valid value for a type
                 //e.g. "example"^^xsd:integer
                 //In this case just use lexical ordering on the value
-                return String.Compare(a.Value, b.Value, culture, comparisonOptions);
+                return culture.CompareInfo.Compare(a.Value, b.Value, comparisonOptions);
             }
         }
 
