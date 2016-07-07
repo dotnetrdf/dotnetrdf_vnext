@@ -24,8 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using VDS.RDF.Graphs;
 using VDS.RDF.Namespaces;
 using VDS.RDF.Nodes;
@@ -303,7 +304,7 @@ namespace VDS.RDF
         /// </summary>
         /// <param name="httpRequest">HTTP Web Request</param>
         /// <remarks><strong>Only available in Debug builds</strong></remarks>
-        public static void HttpDebugRequest(HttpWebRequest httpRequest)
+        public static void HttpDebugRequest(HttpRequestMessage httpRequest)
         {
             if (!Options.HttpDebugging && !Options.HttpFullDebugging)
                 return;
@@ -313,9 +314,9 @@ namespace VDS.RDF
             Console.Error.WriteLine("HTTP Request to " + httpRequest.RequestUri.AbsoluteUri);
             Console.Error.WriteLine();
             Console.Error.WriteLine(httpRequest.Method);
-            foreach (String header in httpRequest.Headers.AllKeys)
+            foreach (KeyValuePair<string, IEnumerable<string>> header in httpRequest.Headers)
             {
-                Console.Error.WriteLine(header + ":" + httpRequest.Headers[header]);
+                Console.Error.WriteLine(header.Key + ":" + string.Join(",", header.Value));
             }
             Console.Error.WriteLine();
         }
@@ -325,30 +326,30 @@ namespace VDS.RDF
         /// </summary>
         /// <param name="httpResponse">HTTP Web Response</param>
         /// <remarks><strong>Only available in Debug builds</strong></remarks>
-        public static void HttpDebugResponse(HttpWebResponse httpResponse)
+        public static void HttpDebugResponse(HttpResponseMessage httpResponse)
         {
             if (!Options.HttpDebugging && !Options.HttpFullDebugging)
                 return;
 
             //Output the Response Uri and Headers
             Console.Error.WriteLine();
-            Console.Error.WriteLine("HTTP Response from " + httpResponse.ResponseUri.AbsoluteUri);
+            Console.Error.WriteLine("HTTP Response from " + httpResponse.RequestMessage.RequestUri.AbsoluteUri);
 #if SILVERLIGHT
             Console.Error.WriteLine("HTTP " + (int)httpResponse.StatusCode + " " + httpResponse.StatusDescription);
 #else
-            Console.Error.WriteLine("HTTP/" + httpResponse.ProtocolVersion + " " + (int)httpResponse.StatusCode + " " + httpResponse.StatusDescription);
+            Console.Error.WriteLine("HTTP/" + httpResponse.Version + " " + (int)httpResponse.StatusCode + " " + httpResponse.ReasonPhrase);
 #endif
             Console.Error.WriteLine();
-            foreach (String header in httpResponse.Headers.AllKeys)
+            foreach (KeyValuePair<string, IEnumerable<string>> header in httpResponse.Headers)
             {
-                Console.Error.WriteLine(header + ":" + httpResponse.Headers[header]);
+                Console.Error.WriteLine(header.Key + ":" + string.Join(",", header.Value));
             }
             Console.Error.WriteLine();
 
             if (Options.HttpFullDebugging)
             {
                 //Output the actual Response
-                Stream data = httpResponse.GetResponseStream();
+                Stream data = httpResponse.Content.ReadAsStreamAsync().Result;
                 if (data != null)
                 {
                     StreamReader reader = new StreamReader(data);
