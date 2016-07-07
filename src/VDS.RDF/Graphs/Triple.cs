@@ -25,8 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -34,24 +32,14 @@ using System.Xml.Serialization;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing;
 using VDS.RDF.Writing.Formatting;
-#if !SILVERLIGHT
-using VDS.RDF.Writing.Serialization;
-
-#endif
 
 namespace VDS.RDF.Graphs
 {
     /// <summary>
     /// Class for representing RDF Triples in memory
     /// </summary>
-#if !SILVERLIGHT
-    [Serializable, XmlRoot(ElementName = "triple")]
-#endif
     public sealed class Triple
         : IEquatable<Triple>, IComparable<Triple>
-#if !SILVERLIGHT
-            , ISerializable, IXmlSerializable
-#endif
     {
         private int _hashcode;
 
@@ -77,24 +65,6 @@ namespace VDS.RDF.Graphs
             //Compute Hash Code
             this._hashcode = Tools.CreateHashCode(this);
         }
-
-#if !SILVERLIGHT
-
-        /// <summary>
-        /// Deserialization only constructor
-        /// </summary>
-        private Triple() {}
-
-        private Triple(SerializationInfo info, StreamingContext context)
-        {
-            this.Subject = (INode) info.GetValue("s", typeof (INode));
-            this.Predicate = (INode) info.GetValue("p", typeof (INode));
-            this.Object = (INode) info.GetValue("o", typeof (INode));
-
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-#endif
 
         /// <summary>
         /// Gets the Subject of the Triple
@@ -292,64 +262,5 @@ namespace VDS.RDF.Graphs
             }
             return s;
         }
-
-#if !SILVERLIGHT
-
-        #region ISerializable Members
-
-        /// <summary>
-        /// Gets the data for serialization
-        /// </summary>
-        /// <param name="info">Serilization Information</param>
-        /// <param name="context">Streaming Context</param>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("s", this.Subject);
-            info.AddValue("p", this.Predicate);
-            info.AddValue("o", this.Object);
-        }
-
-        #endregion
-
-        #region IXmlSerializable Members
-
-        /// <summary>
-        /// Gets the schema for XML serialization
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Reads the data for XML deserialization
-        /// </summary>
-        /// <param name="reader">XML Reader</param>
-        public void ReadXml(XmlReader reader)
-        {
-            reader.Read();
-            this.Subject = reader.DeserializeNode();
-            this.Predicate = reader.DeserializeNode();
-            this.Object = reader.DeserializeNode();
-
-            //Compute Hash Code
-            this._hashcode = Tools.CreateHashCode(this);
-        }
-
-        /// <summary>
-        /// Writes the data for XML serialization
-        /// </summary>
-        /// <param name="writer">XML Writer</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            this.Subject.SerializeNode(writer);
-            this.Predicate.SerializeNode(writer);
-            this.Object.SerializeNode(writer);
-        }
-
-        #endregion
-
-#endif
     }
 }
