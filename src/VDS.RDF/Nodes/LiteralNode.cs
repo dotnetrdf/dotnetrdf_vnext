@@ -94,11 +94,12 @@ namespace VDS.RDF.Nodes
             // Normalize value if appropriate
             if (normalize)
             {
-#if !NO_NORM
-                this.Value = literal != null ? literal.Normalize() : String.Empty;
-#else
+                // TODO: Currently no support in .NET Core for String.Normalize() - may need to find a way around this
+//#if !NO_NORM
+//                this.Value = literal != null ? literal.Normalize() : String.Empty;
+//#else
                 this.Value = literal != null ? literal : String.Empty;
-#endif
+//#endif
             }
             else
             {
