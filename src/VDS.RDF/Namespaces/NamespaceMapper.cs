@@ -695,5 +695,10 @@ namespace VDS.RDF.Namespaces
                 return false;
             }
         }
+
+        public override int GetHashCode()
+        {
+            return this._u.GetHashCode();
+        }
     }
 }
