@@ -37,7 +37,7 @@ namespace VDS.RDF.Parsing
     /// </summary>
     public static class EmbeddedResourceLoader
     {
-        private static readonly String _currAsmName = GetAssemblyName(Assembly.GetExecutingAssembly());
+        private static readonly String _currAsmName = GetAssemblyName(typeof(EmbeddedResourceLoader).GetTypeInfo().Assembly);
 
         /// <summary>
         /// Loads a Graph from an Embedded Resource
@@ -73,7 +73,7 @@ namespace VDS.RDF.Parsing
                     resourceName = resourceName.Substring(0, resource.IndexOf(',')).TrimEnd();
 
                     //Try to load this assembly
-                    Assembly asm = assemblyName.Equals(_currAsmName) ? Assembly.GetExecutingAssembly() : Assembly.Load(assemblyName);
+                    Assembly asm = assemblyName.Equals(_currAsmName) ? typeof(EmbeddedResourceLoader).GetTypeInfo().Assembly : Assembly.Load(new AssemblyName(assemblyName));
                     if (asm != null)
                     {
                         //Resource is in the loaded assembly
@@ -87,7 +87,7 @@ namespace VDS.RDF.Parsing
                 else
                 {
                     //Resource is in dotNetRDF
-                    EmbeddedResourceLoader.LoadGraphInternal(handler, Assembly.GetExecutingAssembly(), resourceName, parser);
+                    EmbeddedResourceLoader.LoadGraphInternal(handler, typeof(EmbeddedResourceLoader).GetTypeInfo().Assembly, resourceName, parser);
                 }
             }
             catch (RdfParseException)
