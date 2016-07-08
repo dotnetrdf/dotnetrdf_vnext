@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Linq;
 using VDS.RDF.Graphs;
 using VDS.RDF.Parsing.Handlers;
 
@@ -237,6 +239,7 @@ namespace VDS.RDF.Parsing
         {
             if (handler == null) throw new RdfParseException("Cannot read RDF using a null RDF Handler");
             if (u == null) throw new RdfParseException("Cannot load RDF from a null URI");
+            HttpResponseMessage httpResponse = null;
             try
             {
 #if SILVERLIGHT
@@ -303,18 +306,19 @@ namespace VDS.RDF.Parsing
 #endif
 
                 //Set-up the Request
-                HttpWebRequest httpRequest;
-                httpRequest = (HttpWebRequest) WebRequest.Create(u);
+                HttpClient client = new HttpClient();
+                HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, u);
+                httpRequest.Headers.Clear();
 
                 //Want to ask for RDF formats
                 if (parser != null)
                 {
                     //If a non-null parser set up a HTTP Header that is just for the given parser
-                    httpRequest.Accept = IOManager.CustomHttpAcceptHeader(parser);
+                    httpRequest.Headers.Add("Accept", IOManager.CustomHttpAcceptHeader(parser));
                 }
                 else
                 {
-                    httpRequest.Accept = IOManager.HttpAcceptHeader;
+                    httpRequest.Headers.Add("Accept", IOManager.HttpAcceptHeader);
                 }
 
 #if !NO_URICACHE
@@ -322,25 +326,24 @@ namespace VDS.RDF.Parsing
                 {
                     if (!etag.Equals(String.Empty))
                     {
-                        httpRequest.Headers.Add(HttpRequestHeader.IfNoneMatch, etag);
+                        httpRequest.Headers.Add("If-None-Match", etag);
                     }
                 }
 #endif
 
-                //Use HTTP GET
-                httpRequest.Method = "GET";
 #if !SILVERLIGHT
-                httpRequest.Timeout = IOOptions.UriLoaderTimeout;
+                client.Timeout = TimeSpan.FromMilliseconds(IOOptions.UriLoaderTimeout);
 #endif
                 if (_userAgent != null && !_userAgent.Equals(String.Empty))
                 {
-                    httpRequest.UserAgent = _userAgent;
+                    httpRequest.Headers.Add("User-Agent", _userAgent);
                 }
 
                 Tools.HttpDebugRequest(httpRequest);
 
-                using (HttpWebResponse httpResponse = (HttpWebResponse) httpRequest.GetResponse())
+                using (httpResponse = client.SendAsync(httpRequest).Result)
                 {
+                    httpResponse.EnsureSuccessStatusCode();
                     Tools.HttpDebugResponse(httpResponse);
 
 #if !NO_URICACHE
@@ -387,7 +390,7 @@ namespace VDS.RDF.Parsing
                     if (parser == null)
                     {
                         //Only need to auto-detect the parser if a specific one wasn't specified
-                        parser = IOManager.GetParser(httpResponse.ContentType);
+                        parser = IOManager.GetParser(httpResponse.Content.Headers.ContentType.MediaType);
                     }
                     parser.Warning += RaiseWarning;
 #if !NO_URICACHE
@@ -395,7 +398,7 @@ namespace VDS.RDF.Parsing
                     if (IOOptions.UriLoaderCaching)
 
                     {
-                        IRdfHandler cacheHandler = _cache.ToCache(u, UriFactory.StripUriFragment(httpResponse.ResponseUri), httpResponse.Headers["ETag"]);
+                        IRdfHandler cacheHandler = _cache.ToCache(u, UriFactory.StripUriFragment(httpResponse.RequestMessage.RequestUri), httpResponse.Headers.GetValues("ETag").FirstOrDefault());
 
                         if (cacheHandler != null)
                         {
@@ -403,7 +406,7 @@ namespace VDS.RDF.Parsing
                             //i.e. if the Handler may trim the data in some way then we shouldn't cache the data returned
                             if (handler.AcceptsAll)
                             {
-                                handler = new MultiHandler(new IRdfHandler[] {handler, cacheHandler});
+                                handler = new MultiHandler(new IRdfHandler[] { handler, cacheHandler });
                             }
                             else
                             {
@@ -414,7 +417,7 @@ namespace VDS.RDF.Parsing
                     try
                     {
 #endif
-                        parser.Load(handler, new StreamReader(httpResponse.GetResponseStream()));
+                        parser.Load(handler, new StreamReader(httpResponse.Content.ReadAsStreamAsync().Result));
 
 #if !NO_URICACHE
                     }
@@ -424,10 +427,10 @@ namespace VDS.RDF.Parsing
                         if (IOOptions.UriLoaderCaching)
                         {
                             _cache.RemoveETag(u);
-                            _cache.RemoveETag(UriFactory.StripUriFragment(httpResponse.ResponseUri));
+                            _cache.RemoveETag(UriFactory.StripUriFragment(httpResponse.RequestMessage.RequestUri));
 
                             _cache.RemoveLocalCopy(u);
-                            _cache.RemoveLocalCopy(UriFactory.StripUriFragment(httpResponse.ResponseUri));
+                            _cache.RemoveLocalCopy(UriFactory.StripUriFragment(httpResponse.RequestMessage.RequestUri));
                         }
                         throw;
                     }
@@ -439,19 +442,19 @@ namespace VDS.RDF.Parsing
                 //Uri Format Invalid
                 throw new RdfParseException("Unable to load from the given URI '" + u.AbsoluteUri + "' since it's format was invalid", uriEx);
             }
-            catch (WebException webEx)
+            catch (HttpRequestException webEx)
             {
-                if (webEx.Response != null)
+                if (httpResponse != null)
                 {
-                    Tools.HttpDebugResponse((HttpWebResponse) webEx.Response);
+                    Tools.HttpDebugResponse(httpResponse);
                 }
 
 #if !NO_URICACHE
                 if (IOOptions.UriLoaderCaching)
                 {
-                    if (webEx.Response != null)
+                    if (httpResponse != null)
                     {
-                        if (((HttpWebResponse) webEx.Response).StatusCode == HttpStatusCode.NotModified)
+                        if (httpResponse.StatusCode == HttpStatusCode.NotModified)
                         {
                             //If so then we need to load the Local Copy assuming it exists?
                             if (_cache.HasLocalCopy(u, false))
@@ -484,7 +487,7 @@ namespace VDS.RDF.Parsing
 #endif
 
                 //Some sort of HTTP Error occurred
-                throw new WebException("A HTTP Error occurred resolving the URI '" + u.AbsoluteUri + "'", webEx);
+                throw new HttpRequestException("A HTTP Error occurred resolving the URI '" + u.AbsoluteUri + "'", webEx);
             }
         }
 
