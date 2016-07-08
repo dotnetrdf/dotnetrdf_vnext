@@ -126,14 +126,14 @@ namespace VDS.RDF
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up the appropriate encoding
-            parser.Load(new GraphHandler(g), new StreamReader(filename));
+            parser.Load(new GraphHandler(g), new StreamReader(new FileStream(filename, FileMode.Create)));
         }
 
         public static void Load(this IRdfReader parser, IGraphStore graphStore, String filename)
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up appropriate encoding
-            parser.Load(new GraphStoreHandler(graphStore), new StreamReader(filename));
+            parser.Load(new GraphStoreHandler(graphStore), new StreamReader(new FileStream(filename, FileMode.Create)));
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace VDS.RDF
         {
             if (ReferenceEquals(writer, null)) throw new ArgumentNullException("writer");
             // TODO This should lookup the appropriate encoding
-            writer.Save(g, new StreamWriter(filename));
+            writer.Save(g, new StreamWriter(new FileStream(filename, FileMode.Create)));
         }
 #endif
 
@@ -450,7 +450,7 @@ namespace VDS.RDF
             else
             {
                 // TODO Should create stream with appropriate encoding
-                writer.Save(store, new StreamWriter(file));
+                writer.Save(store, new StreamWriter(new FileStream(file, FileMode.Create)));
             }
         }
 
@@ -463,7 +463,7 @@ namespace VDS.RDF
         {
             IRdfWriter writer = IOManager.GetWriterByFileExtension(IOManager.GetTrueFileExtension(file));
             // TODO Should create stream with appropriate encoding
-            writer.Save(store, new StreamWriter(file));
+            writer.Save(store, new StreamWriter(new FileStream(file, FileMode.Create)));
         }
 
 #endif

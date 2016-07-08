@@ -108,7 +108,8 @@ namespace VDS.RDF.Parsing
                 {
                     //Probably RDF/XML
                     format = "RDF/XML";
-                    Parse(g, data, new RdfXmlParser());
+                    var parser = IOManager.GetParser(IOManager.RdfXml[0]);
+                    Parse(g, data, parser);
                 }
                 else if (data.Contains("@prefix") || data.Contains("@base"))
                 {
@@ -193,7 +194,8 @@ namespace VDS.RDF.Parsing
                 {
                     //Probably TriX
                     format = "TriX";
-                    ParseDataset(store, data, new TriXParser());
+                    var parser = IOManager.GetParser(IOManager.TriX[0]);
+                    ParseDataset(store, data,  parser);
                 }
                 else if (data.Contains("@prefix") || data.Contains("@base"))
                 {
@@ -227,7 +229,7 @@ namespace VDS.RDF.Parsing
             if (data.Contains("<?xml") && data.Contains("<rdf:RDF"))
             {
                 //Probably RDF/XML
-                return new RdfXmlParser();
+                return IOManager.GetParser(IOManager.RdfXml[0]);
             }
             else if (data.Contains("@prefix") || data.Contains("@base"))
             {

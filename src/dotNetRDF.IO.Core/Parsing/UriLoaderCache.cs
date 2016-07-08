@@ -468,7 +468,7 @@ namespace VDS.RDF.Parsing
                     if (cacheTwice)
                     {
                         graph = Path.Combine(this._graphDir, responseUri.GetSha256Hash());
-                        handler = new MultiHandler(new IRdfHandler[] { handler, new WriteThroughHandler(this._formatterType, new StreamWriter(new FileStream(graph, FileMode.Append)) });
+                        handler = new MultiHandler(new IRdfHandler[] { handler, new WriteThroughHandler(this._formatterType, new StreamWriter(new FileStream(graph, FileMode.Append))) });
                     }
                 }
             }
