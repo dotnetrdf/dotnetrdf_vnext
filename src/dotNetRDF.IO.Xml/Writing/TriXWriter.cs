@@ -66,36 +66,27 @@ namespace VDS.RDF.Writing
             if (store == null) throw new RdfOutputException("Cannot output a null Triple Store");
             if (output == null) throw new RdfOutputException("Cannot output to a null writer");
 
-            try
+            INamespaceMapper namespaces = WriterHelper.ExtractNamespaces(store);
+            TriXWriterContext context = new TriXWriterContext(store, namespaces, output, XmlWriter.Create(output, GetSettings()));
+
+            //Setup the XML document
+            context.XmlWriter.WriteStartDocument();
+            context.XmlWriter.WriteStartElement("TriX", TriXParser.TriXNamespaceUri);
+            context.XmlWriter.WriteStartAttribute("xmlns");
+            context.XmlWriter.WriteRaw(TriXParser.TriXNamespaceUri);
+            context.XmlWriter.WriteEndAttribute();
+
+            //Output Graphs as XML <graph> elements
+            foreach (INode graphName in context.GraphStore.GraphNames)
             {
-                INamespaceMapper namespaces = WriterHelper.ExtractNamespaces(store);
-                TriXWriterContext context = new TriXWriterContext(store, namespaces, output, XmlWriter.Create(output, GetSettings()));
-
-                //Setup the XML document
-                context.XmlWriter.WriteStartDocument();
-                context.XmlWriter.WriteStartElement("TriX", TriXParser.TriXNamespaceUri);
-                context.XmlWriter.WriteStartAttribute("xmlns");
-                context.XmlWriter.WriteRaw(TriXParser.TriXNamespaceUri);
-                context.XmlWriter.WriteEndAttribute();
-
-                //Output Graphs as XML <graph> elements
-                foreach (INode graphName in context.GraphStore.GraphNames)
-                {
-                    context.CurrentGraphName = graphName;
-                    context.CurrentGraph = context.GraphStore[graphName];
-                    this.GraphToTriX(context);
-                }
-
-                //Save the XML to disk
-                context.XmlWriter.WriteEndDocument();
-                context.XmlWriter.Flush();
-                context.XmlWriter.Close();
-                output.Close();
+                context.CurrentGraphName = graphName;
+                context.CurrentGraph = context.GraphStore[graphName];
+                this.GraphToTriX(context);
             }
-            finally
-            {
-                output.CloseQuietly();
-            }
+
+            //Save the XML to disk
+            context.XmlWriter.WriteEndDocument();
+            context.XmlWriter.Flush();
         }
 
         private void GraphToTriX(TriXWriterContext context)
