@@ -25,19 +25,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 //Uncomment this when making changes that need to work with the non-XML DOM code
 //#define NO_XMLDOM
+#define NO_XSL
 
 using System;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
-#if !NO_XSL
-using System.Xml.Xsl;
-#endif
 using VDS.RDF.Graphs;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing.Contexts;
 using VDS.RDF.Writing;
+
 
 namespace VDS.RDF.Parsing
 {
@@ -82,8 +81,6 @@ namespace VDS.RDF.Parsing
                 XmlDocument doc = new XmlDocument();
                 doc.Load(input);
 
-                input.Close();
-
                 XmlDocument inputDoc = new XmlDocument();
                 bool inputReady = false;
 
@@ -127,16 +124,11 @@ namespace VDS.RDF.Parsing
                 TriXParserContext context = new TriXParserContext(handler, profile);
                 this.TryParseGraphset(inputDoc, context);
 
-                input.Close();
             }
             catch (XmlException xmlEx)
             {
                 //Wrap in a RDF Parse Exception
                 throw new RdfParseException("Unable to Parse this TriX since System.Xml was unable to parse the document into a DOM Tree, see the inner exception for details", xmlEx);
-            }
-            finally
-            {
-                input.CloseQuietly();
             }
         }
 
