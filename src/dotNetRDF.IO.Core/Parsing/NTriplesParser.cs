@@ -115,29 +115,22 @@ namespace VDS.RDF.Parsing
             if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
             if (input == null) throw new RdfParseException("Cannot read RDF from a null TextReader");
 
-            try
+            // Check for incorrect stream encoding and issue warning if appropriate
+            switch (this.Syntax)
             {
-                // Check for incorrect stream encoding and issue warning if appropriate
-                switch (this.Syntax)
-                {
-                    case NTriplesSyntax.Original:
+                case NTriplesSyntax.Original:
 #if !SILVERLIGHT
-                        input.CheckEncoding(Encoding.ASCII, this.RaiseWarning);
+                    input.CheckEncoding(Encoding.ASCII, this.RaiseWarning);
 #endif
-                        break;
-                    default:
-                        input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
-                        break;
-                }
-                profile = profile.EnsureParserProfile();
+                    break;
+                default:
+                    input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
+                    break;
+            }
+            profile = profile.EnsureParserProfile();
 
-                TokenisingParserContext context = new TokenisingParserContext(handler, new NTriplesTokeniser(input, this.Syntax), this.TokenQueueMode, this.TraceParsing, this.TraceTokeniser, profile);
-                this.Parse(context);
-            }
-            finally
-            {
-                input.CloseQuietly();
-            }
+            TokenisingParserContext context = new TokenisingParserContext(handler, new NTriplesTokeniser(input, this.Syntax), this.TokenQueueMode, this.TraceParsing, this.TraceTokeniser, profile);
+            this.Parse(context);
         }
 
         private void Parse(TokenisingParserContext context)

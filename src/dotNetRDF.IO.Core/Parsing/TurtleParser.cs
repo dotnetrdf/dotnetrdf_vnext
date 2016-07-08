@@ -118,18 +118,11 @@ namespace VDS.RDF.Parsing
             if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
             if (input == null) throw new RdfParseException("Cannot read RDF from a null TextReader");
 
-            try
-            {
-                input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
-                profile = profile.EnsureParserProfile();
+            input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
+            profile = profile.EnsureParserProfile();
 
-                TurtleParserContext context = new TurtleParserContext(handler, new TurtleTokeniser(input, this.Syntax), this.Syntax, this.TokenQueueMode, this.TraceParsing, this.TraceTokeniser, profile);
-                this.Parse(context);
-            }
-            finally
-            {
-                input.CloseQuietly();
-            }
+            TurtleParserContext context = new TurtleParserContext(handler, new TurtleTokeniser(input, this.Syntax), this.Syntax, this.TokenQueueMode, this.TraceParsing, this.TraceTokeniser, profile);
+            this.Parse(context);
         }
 
         /// <summary>
