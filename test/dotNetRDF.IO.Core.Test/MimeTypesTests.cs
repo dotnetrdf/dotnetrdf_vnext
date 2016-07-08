@@ -77,7 +77,7 @@ namespace VDS.RDF
 #if PORTABLE
             Assert.Equal(16, count);
 #else
-            Assert.Equal(19, count);
+            Assert.Equal(15, count);
 #endif
         }
 
@@ -86,11 +86,7 @@ namespace VDS.RDF
         {
             int count = IOManager.GetDefinitions(IOManager.Any).Count();
             Console.WriteLine(count + " Definitions registered");
-#if PORTABLE
-            Assert.Equal(16, count);
-#else
-            Assert.Equal(19, count);
-#endif
+            Assert.Equal(15, count);
         }
 
         [Fact]
