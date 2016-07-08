@@ -347,18 +347,6 @@ namespace VDS.RDF
                 _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "GZipped TriG", MimeTypes = TriG, FileExtensions = new String[] {DefaultTriGExtension + "." + DefaultGZipExtension}, RdfParserType = typeof (GZippedTriGParser), RdfWriterType = typeof (GZippedTriGWriter)});
 #endif
 
-                //Define TriX
-                _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "TriX", MimeTypes = TriX, FileExtensions = new String[] {DefaultTriXExtension}, RdfParserType = typeof (TriXParser), RdfWriterType = typeof (TriXWriter), Quality = 0.3});
-#if !NO_COMPRESSION
-                _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "GZipped TriX", MimeTypes = TriX, FileExtensions = new String[] {DefaultTriXExtension + "." + DefaultGZipExtension}, RdfParserType = typeof (GZippedTriXParser), RdfWriterType = typeof (GZippedTriXWriter), Quality = 0.2});
-#endif
-                //Define RDF/XML
-                _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "RDF/XML", FormatUri = W3CFormatsNamespace + "RDF_XML", MimeTypes = RdfXml, FileExtensions = new String[] {DefaultRdfXmlExtension, "owl"}, RdfParserType = typeof (RdfXmlParser), RdfWriterType = typeof (RdfXmlWriter), Quality = 0.3});
-#if !NO_COMPRESSION
-                _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "GZipped RDF/XML", MimeTypes = RdfXml, FileExtensions = new String[] {DefaultRdfXmlExtension + "." + DefaultGZipExtension}, RdfParserType = typeof (GZippedRdfXmlParser), RdfWriterType = typeof (GZippedRdfXmlWriter), Quality = 0.2});
-#endif
-
-
                 //Define CSV
                 _mimeTypes.Add(new MimeTypeDefinition {SyntaxName = "CSV", MimeTypes = Csv, FileExtensions = new String[] {DefaultCsvExtension}, RdfWriterType = typeof (CsvWriter), Quality = 0.1});
 #if !NO_COMPRESSION
