@@ -90,7 +90,6 @@ namespace VDS.RDF.Writing
                 {
                     writer.WriteLine(formatter.Format(t));
                 }
-                writer.Close();
             }
             finally
             {
@@ -115,7 +114,6 @@ namespace VDS.RDF.Writing
                 {
                     writer.WriteLine(formatter.Format(q));
                 }
-                writer.Close();
             }
             finally
             {

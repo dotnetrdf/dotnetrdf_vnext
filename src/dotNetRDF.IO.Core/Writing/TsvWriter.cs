@@ -74,8 +74,6 @@ namespace VDS.RDF.Writing
                     this.GenerateNodeOutput(output, t.Object, QuadSegment.Object);
                     output.Write('\n');
                 }
-
-                output.Close();
             }
             finally
             {
@@ -107,7 +105,6 @@ namespace VDS.RDF.Writing
                         output.WriteLine();
                     }
                 }
-                output.Close();
             }
             finally
             {

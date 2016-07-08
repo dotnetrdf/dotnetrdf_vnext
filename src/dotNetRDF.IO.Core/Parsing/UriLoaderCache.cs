@@ -276,7 +276,6 @@ namespace VDS.RDF.Parsing
                             {
                                 writer.WriteLine(etag.Key + "\t" + etag.Value);
                             }
-                            writer.Close();
                         }
                     }
                 }
@@ -428,7 +427,6 @@ namespace VDS.RDF.Parsing
                         using (StreamWriter writer = new StreamWriter(this._etagFile, true, Encoding.UTF8))
                         {
                             writer.WriteLine(id + "\t" + etag);
-                            writer.Close();
                         }
                     }
 
@@ -456,7 +454,6 @@ namespace VDS.RDF.Parsing
                             using (StreamWriter writer = new StreamWriter(this._etagFile, true, Encoding.UTF8))
                             {
                                 writer.WriteLine(id + "\t" + etag);
-                                writer.Close();
                             }
                         }
                     }

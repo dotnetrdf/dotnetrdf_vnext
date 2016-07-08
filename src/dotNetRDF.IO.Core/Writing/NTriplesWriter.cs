@@ -108,8 +108,6 @@ namespace VDS.RDF.Writing
                 {
                     output.WriteLine(this.TripleToNTriples(context, t));
                 }
-
-                output.Close();
             }
             finally
             {

@@ -343,20 +343,6 @@ namespace VDS.RDF.Parsing
             }
         }
 
-#if PORTABLE
-        public void Close()
-        {
-            // No-op as portable library version of TextReader has no Close() method
-        }
-#else
-        /// <summary>
-        /// Closes the reader and the underlying reader
-        /// </summary>
-        public override void Close()
-        {
-            this._reader.Close();
-        }
-#endif
 
         /// <summary>
         /// Disposes of the reader and the underlying reader
@@ -365,7 +351,6 @@ namespace VDS.RDF.Parsing
         protected override void Dispose(bool disposing)
         {
             if (disposing) GC.SuppressFinalize(this);
-            this.Close();
             this._reader.Dispose();
             base.Dispose(disposing);
         }

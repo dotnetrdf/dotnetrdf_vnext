@@ -118,9 +118,6 @@ namespace VDS.RDF.Writing
                     context.CurrentGraph = context.GraphStore[graphName];
                     this.GenerateGraphOutput(context);
                 }
-
-                //Make sure to close the output
-                context.Output.Close();
             }
             finally
             {

@@ -62,7 +62,6 @@ namespace VDS.RDF.Writing
             //End the Graph
             output.WriteLine("}");
 
-            output.Close();
         }
 
         /// <summary>

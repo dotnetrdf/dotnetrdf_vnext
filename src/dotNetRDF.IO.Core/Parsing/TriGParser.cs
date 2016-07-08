@@ -128,7 +128,6 @@ namespace VDS.RDF.Parsing
                 TriGParserContext context = new TriGParserContext(handler, new TriGTokeniser(input, this._syntax), this._queueMode, false, this._tracetokeniser, profile);
                 context.Syntax = this._syntax;
                 this.Parse(context);
-                input.Close();
             }
             finally
             {

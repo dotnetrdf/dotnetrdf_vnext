@@ -129,9 +129,7 @@ namespace VDS.RDF.Writing
                         if (read == 0) break;
                         writer.Write(buffer, 0, read);
                     }
-                    reader.Close();
                 }
-                writer.Close();
                 gvz.Close();
             }
 

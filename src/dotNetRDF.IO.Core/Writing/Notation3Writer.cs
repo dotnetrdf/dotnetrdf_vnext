@@ -163,8 +163,6 @@ namespace VDS.RDF.Writing
                 CompressingTurtleWriterContext context = new CompressingTurtleWriterContext(g, output, this._compressionLevel, this._prettyprint, this._allowHiSpeed);
                 context.NodeFormatter = new Notation3Formatter(g);
                 this.GenerateOutput(context);
-
-                output.Close();
             }
             finally
             {
