@@ -67,7 +67,7 @@ namespace VDS.RDF.Parsing.Events.RdfXml
         public DomBasedEventGenerator(String file)
         {
             this._document = new XmlDocument();
-            this._document.Load(file);
+            this._document.Load(new FileStream(file, FileMode.Open));
         }
 
         /// <summary>
@@ -379,7 +379,10 @@ namespace VDS.RDF.Parsing.Events.RdfXml
             if (parseTypeLiteral)
             {
                 //Generate an XMLLiteral from its Inner Xml (if any)
-                TypedLiteralEvent lit = new TypedLiteralEvent(node.InnerXml.Normalize(), RdfSpecsHelper.RdfXmlLiteral, node.InnerXml);
+                TypedLiteralEvent lit = new TypedLiteralEvent(
+                    //node.InnerXml.Normalize(), 
+                    node.InnerXml,
+                    RdfSpecsHelper.RdfXmlLiteral, node.InnerXml);
                 element.Children.Add(lit);
                 return element;
             }
@@ -411,14 +414,20 @@ namespace VDS.RDF.Parsing.Events.RdfXml
                     //Single Child which is a Text Node
 
                     //Generate a Text Event
-                    TextEvent text = new TextEvent(node.InnerText.Normalize(), node.OuterXml);
+                    TextEvent text = new TextEvent(
+                        //node.InnerText.Normalize(), 
+                        node.InnerText,
+                        node.OuterXml);
                     element.Children.Add(text);
                 }
                 else if (node.ChildNodes[0].NodeType == XmlNodeType.CDATA)
                 {
                     //Single Child which is a CData Node
 
-                    TextEvent text = new TextEvent(node.InnerXml.Normalize(), node.OuterXml);
+                    TextEvent text = new TextEvent(
+                        //node.InnerXml.Normalize(), 
+                        node.InnerXml,
+                        node.OuterXml);
                     element.Children.Add(text);
                 }
                 else
