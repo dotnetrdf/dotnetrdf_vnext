@@ -178,19 +178,6 @@ namespace VDS.RDF.Writing
             : base(new Notation3Writer()) { }
     }
 
-    /// <summary>
-    /// Writer for GZipped RDF/XML
-    /// </summary>
-    public class GZippedRdfXmlWriter
-        : BaseGZipWriter
-    {
-        /// <summary>
-        /// Creates a new GZipped RDF/XML writer
-        /// </summary>
-        public GZippedRdfXmlWriter()
-            : base(new RdfXmlWriter()) { }
-    }
-
     public class GZippedNQuadsWriter
         : BaseGZipWriter
     {
@@ -205,13 +192,7 @@ namespace VDS.RDF.Writing
             : base(new TriGWriter()) { }
     }
 
-    public class GZippedTriXWriter
-        : BaseGZipWriter
-    {
-        public GZippedTriXWriter()
-            : base(new TriXWriter()) { }
-    }
-
+    
     public class GZippedCsvWriter
         : BaseGZipWriter
     {
