@@ -65,7 +65,7 @@ namespace VDS.RDF.Writing
         /// <param name="filename">File to save to</param>
         public void Save(IGraph g, string filename)
         {
-            this.Save(g, new StreamWriter(filename, false, Encoding.UTF8));
+            this.Save(g, new StreamWriter(new FileStream(filename, FileMode.Create), Encoding.UTF8));
         }
 #endif
 

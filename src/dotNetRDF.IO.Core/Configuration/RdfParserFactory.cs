@@ -70,9 +70,10 @@ namespace VDS.RDF.Configuration
         public bool CanLoadObject(Type t)
         {
             //We can load any object which implements any parser interface and has a public unparameterized constructor
-            if (t.GetInterfaces().Any(i => this._rdfParserType.Equals(i)))
+            var typeInfo = t.GetTypeInfo();
+            if (typeInfo.GetInterfaces().Any(i => this._rdfParserType.Equals(i)))
             {
-                ConstructorInfo c = t.GetConstructor(new Type[0]);
+                ConstructorInfo c = typeInfo.GetConstructor(new Type[0]);
                 return c != null && c.IsPublic;
             }
             return false;
