@@ -29,6 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.DependencyModel;
 using VDS.RDF.Attributes;
 using VDS.RDF.Parsing;
 using VDS.RDF.Writing;
@@ -379,13 +380,23 @@ namespace VDS.RDF
         {
             lock (_mimeTypes)
             {
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                var deps = DependencyContext.Default;
+                foreach(var lib in deps.RuntimeLibraries)
                 {
-                    foreach (RdfIOAttribute attribute in assembly.GetCustomAttributes(typeof (RdfIOAttribute), true))
+                    foreach(var runtimeAssembly in lib.Assemblies)
                     {
-                        _mimeTypes.Add(attribute.GetDefinition());
+                        var assembly = Assembly.Load(runtimeAssembly.Name);
+                        ScanDefinitions(assembly);
                     }
                 }
+            }
+        }
+
+        public static void ScanDefinitions(Assembly assembly)
+        {
+            foreach (RdfIOAttribute attribute in assembly.CustomAttributes.OfType<RdfIOAttribute>())
+            {
+                _mimeTypes.Add(attribute.GetDefinition());
             }
         }
 
