@@ -31,6 +31,7 @@ using Xunit;
 using VDS.RDF.Graphs;
 using VDS.RDF.Specifications;
 using VDS.RDF.Writing.Formatting;
+using FluentAssertions;
 
 namespace VDS.RDF.Nodes
 {
@@ -39,14 +40,14 @@ namespace VDS.RDF.Nodes
         [Fact]
         public void NodeToLiteralCultureInvariant1()
         {
-            CultureInfo sysCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo sysCulture = CultureInfo.CurrentCulture;
             try
             {
                 // given
                 INodeFactory nodeFactory = new NodeFactory();
 
                 // when
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("pl");
+                CultureInfo.CurrentCulture = new CultureInfo("pl");
 
                 // then
                 Assert.Equal("5.5", 5.5.ToLiteral(nodeFactory).Value);
@@ -54,11 +55,11 @@ namespace VDS.RDF.Nodes
                 Assert.Equal("15.5", 15.5m.ToLiteral(nodeFactory).Value);
 
                 // when
-                CultureInfo culture = Thread.CurrentThread.CurrentCulture;
+                CultureInfo culture = CultureInfo.CurrentCulture;
                 // Make a writable clone
                 culture = (CultureInfo)culture.Clone();
                 culture.NumberFormat.NegativeSign = "!";
-                Thread.CurrentThread.CurrentCulture = culture;
+                CultureInfo.CurrentCulture = culture;
 
                 // then
                 Assert.Equal("-1", (-1).ToLiteral(nodeFactory).Value);
@@ -67,22 +68,22 @@ namespace VDS.RDF.Nodes
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = sysCulture;
+                CultureInfo.CurrentCulture = sysCulture;
             }
         }
 
         [Fact]
         public void NodeToLiteralCultureInvariant2()
         {
-            CultureInfo sysCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo sysCulture = CultureInfo.CurrentCulture;
             try
             {
                 INodeFactory factory = new NodeFactory();
 
-                CultureInfo culture = Thread.CurrentThread.CurrentCulture;
+                CultureInfo culture = CultureInfo.CurrentCulture;
                 culture = (CultureInfo)culture.Clone();
                 culture.NumberFormat.NegativeSign = "!";
-                Thread.CurrentThread.CurrentCulture = culture;
+                CultureInfo.CurrentCulture = culture;
 
                 TurtleFormatter formatter = new TurtleFormatter();
                 String fmtStr = formatter.Format((-1).ToLiteral(factory));
@@ -92,7 +93,7 @@ namespace VDS.RDF.Nodes
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = sysCulture;
+                CultureInfo.CurrentCulture = sysCulture;
             }
         }
 
@@ -212,9 +213,9 @@ namespace VDS.RDF.Nodes
             g.Assert(s, p, lcase);
             g.Assert(s, p, ucase);
 
-            Assert.Equal(1, g.Count, "Triples should be treated as equivalent");
-            Assert.Equal(1, g.GetTriplesWithObject(lcase).Count(), "Lower case search failed");
-            Assert.Equal(1, g.GetTriplesWithObject(ucase).Count(), "Upper case search failed");
+            g.Count.Should().Be(1, because:"Triples should be treated as equivalent");
+            g.GetTriplesWithObject(lcase).Count().Should().Be(1, "Lower case search failed");
+            g.GetTriplesWithObject(ucase).Count().Should().Be(1, "Upper case search failed");
         }
     }
 }

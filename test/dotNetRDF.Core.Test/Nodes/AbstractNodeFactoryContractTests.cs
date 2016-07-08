@@ -31,6 +31,7 @@ using VDS.RDF.Graphs;
 using VDS.RDF.Namespaces;
 using VDS.RDF.Parsing;
 using VDS.RDF.Specifications;
+using FluentAssertions;
 
 namespace VDS.RDF.Nodes
 {
@@ -78,7 +79,7 @@ namespace VDS.RDF.Nodes
             INode b = factory.CreateBlankNode();
             Assert.Equal(NodeType.Blank, b.NodeType);
 
-            Assert.NotEqual(a, b, "Different calls to CreateBlankNode() MUST produce different blank nodes");
+            b.Should().NotBe(a, "Different calls to CreateBlankNode() MUST produce different blank nodes");
         }
 
         [Fact]
@@ -95,7 +96,7 @@ namespace VDS.RDF.Nodes
                 INode b = factory.CreateBlankNode();
                 Assert.Equal(NodeType.Blank, b.NodeType);
 
-                Assert.NotEqual(a, b, "Different calls to CreateBlankNode() MUST produce different blank nodes");
+                b.Should().NotBe(a, "Different calls to CreateBlankNode() MUST produce different blank nodes");
             }
         }
 
@@ -114,7 +115,7 @@ namespace VDS.RDF.Nodes
             Assert.Equal(NodeType.Blank, b.NodeType);
             Assert.Equal(id, b.AnonID);
 
-            Assert.Equal(a, b, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes");
+            b.Should().Be(a, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes");
         }
 
         [Fact]
@@ -133,7 +134,7 @@ namespace VDS.RDF.Nodes
             Assert.Equal(NodeType.Blank, b.NodeType);
             Assert.Equal(id, b.AnonID);
 
-            Assert.NotEqual(a, b, "Calls to CreateBlankNode() with different Guids MUST produce different blank nodes");
+            b.Should().NotBe(a, "Calls to CreateBlankNode() with different Guids MUST produce different blank nodes");
         }
 
         [Fact]
@@ -152,7 +153,7 @@ namespace VDS.RDF.Nodes
             Assert.Equal(NodeType.Blank, b.NodeType);
             Assert.Equal(id, b.AnonID);
 
-            Assert.Equal(a, b, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes across factories");
+            b.Should().Be(a, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes across factories");
         }
 
         [Fact]
@@ -172,7 +173,7 @@ namespace VDS.RDF.Nodes
                 Assert.Equal(NodeType.Blank, b.NodeType);
                 Assert.Equal(id, b.AnonID);
 
-                Assert.Equal(a, b, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes");
+                b.Should().Be(a, "Calls to CreateBlankNode() with the same Guid MUST produce equivalent blank nodes");
             }
         }
 
@@ -194,7 +195,7 @@ namespace VDS.RDF.Nodes
                 Assert.Equal(NodeType.Blank, b.NodeType);
                 Assert.Equal(id, b.AnonID);
 
-                Assert.NotEqual(a, b, "Calls to CreateBlankNode() with different Guids MUST produce different blank nodes");
+                b.Should().NotBe(a, because:"Calls to CreateBlankNode() with different Guids MUST produce different blank nodes");
             }
         }
 
@@ -213,7 +214,7 @@ namespace VDS.RDF.Nodes
             Assert.Equal(NodeType.Uri, b.NodeType);
             Assert.True(this._uriComparer.Equals(u, b.Uri), "Creating a URI Node MUST preserve the given URI as-is");
 
-            Assert.Equal(a, b, "Calls to CreateUriNode() with the same URI MUST produce equivalent URI nodes");
+            b.Should().Be(a, because:"Calls to CreateUriNode() with the same URI MUST produce equivalent URI nodes");
         }
 
         [Fact]
@@ -233,7 +234,7 @@ namespace VDS.RDF.Nodes
                 Assert.Equal(NodeType.Uri, b.NodeType);
                 Assert.True(this._uriComparer.Equals(u, b.Uri), "Creating a URI Node MUST preserve the given URI as-is");
 
-                Assert.Equal(a, b, "Calls to CreateUriNode() with the same URI MUST produce equivalent URI nodes");
+                b.Should().Be(a, because:"Calls to CreateUriNode() with the same URI MUST produce equivalent URI nodes");
             }
         }
 
@@ -253,7 +254,7 @@ namespace VDS.RDF.Nodes
             Assert.Equal(NodeType.Uri, b.NodeType);
             Assert.True(this._uriComparer.Equals(u, b.Uri), "Creating a URI Node MUST preserve the given URI as-is");
 
-            Assert.NotEqual(a, b, "Calls to CreateUriNode() with different URIs MUST produce different URI nodes");
+            b.Should().NotBe(a, because:"Calls to CreateUriNode() with different URIs MUST produce different URI nodes");
         }
 
         [Fact]
@@ -274,7 +275,7 @@ namespace VDS.RDF.Nodes
                 Assert.Equal(NodeType.Uri, b.NodeType);
                 Assert.True(this._uriComparer.Equals(u, b.Uri), "Creating a URI Node MUST preserve the given URI as-is");
 
-                Assert.NotEqual(a, b, "Calls to CreateUriNode() with different URIs MUST produce different URI nodes");
+                b.Should().NotBe(a, because: "Calls to CreateUriNode() with different URIs MUST produce different URI nodes");
             }
         }
 
@@ -318,7 +319,7 @@ namespace VDS.RDF.Nodes
                 Assert.Null(b.DataType);
             }
 
-            Assert.Equal(a, b, "Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
+            b.Should().Be(a, because:"Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
         }
 
         [Fact]
@@ -362,7 +363,7 @@ namespace VDS.RDF.Nodes
                 Assert.Null(b.DataType);
             }
 
-            Assert.Equal(a, b, "Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
+            b.Should().Be(a, because:"Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
         }
 
         [Fact]
@@ -387,7 +388,7 @@ namespace VDS.RDF.Nodes
             Assert.True(b.HasDataType);
             Assert.True(this._uriComparer.Equals(dt, b.DataType));
             
-            Assert.Equal(a, b, "Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
+            b.Should().Be(a, because: "Calling CreateLiteralNode() with the same parameters MUST result in equivalent literal nodes");
         }
 
         [Fact]
@@ -400,11 +401,11 @@ namespace VDS.RDF.Nodes
 
             if (factory.CreatesImplicitlyTypedLiterals)
             {
-                Assert.Equal(implicitLit, explicitLit, "Calling CreateLiteralNode() with equivalent parameters when implicit typing is supported MUST result in equivalent literal nodes");
+                explicitLit.Should().Be(implicitLit, because:"Calling CreateLiteralNode() with equivalent parameters when implicit typing is supported MUST result in equivalent literal nodes");
             }
             else
             {
-                Assert.NotEqual(implicitLit, explicitLit, "Calling CreateLiteralNode() with equivalent parameters when implicit typing is not supported MUST result in different literal nodes");
+                explicitLit.Should().NotBe(implicitLit, because:"Calling CreateLiteralNode() with equivalent parameters when implicit typing is not supported MUST result in different literal nodes");
             }
         }
 
@@ -418,11 +419,11 @@ namespace VDS.RDF.Nodes
 
             if (factory.CreatesImplicitlyTypedLiterals)
             {
-                Assert.Equal(implicitLit, explicitLit, "Calling CreateLiteralNode() with equivalent parameters when implicit typing is supported MUST result in equivalent literal nodes");
+                explicitLit.Should().Be(implicitLit, because:"Calling CreateLiteralNode() with equivalent parameters when implicit typing is supported MUST result in equivalent literal nodes");
             }
             else
             {
-                Assert.NotEqual(implicitLit, explicitLit, "Calling CreateLiteralNode() with equivalent parameters when implicit typing is not supported MUST result in different literal nodes");
+                explicitLit.Should().NotBe(implicitLit, because:"Calling CreateLiteralNode() with equivalent parameters when implicit typing is not supported MUST result in different literal nodes");
             }
         }
 
@@ -595,16 +596,16 @@ namespace VDS.RDF.Nodes
             INode e = factory3.CreateBlankNode();
 
             //Shouldn't be equal
-            Assert.NotEqual(b, c, "Two Anonymous Blank Nodes created by same factory should be non-equal");
-            Assert.NotEqual(c, d, "Anonymous Blank Nodes created by different factories should be non-equal");
-            Assert.NotEqual(b, d, "Anonymous Blank Nodes created by different factories should be non-equal");
-            Assert.NotEqual(d, e, "Anonymous Blank Nodes created by different factories should be non-equal");
+            c.Should().NotBe(b, because:"Two Anonymous Blank Nodes created by same factory should be non-equal");
+            d.Should().NotBe(c, because:"Anonymous Blank Nodes created by different factories should be non-equal");
+            d.Should().NotBe(b, because:"Anonymous Blank Nodes created by different factories should be non-equal");
+            e.Should().NotBe(d, because:"Anonymous Blank Nodes created by different factories should be non-equal");
 
             //Should be equal
-            Assert.Equal(b, b, "A Blank Node should be equal to itself");
-            Assert.Equal(c, c, "A Blank Node should be equal to itself");
-            Assert.Equal(d, d, "A Blank Node should be equal to itself");
-            Assert.Equal(e, e, "A Blank Node should be equal to itself");
+            b.Should().Be(b, because:"A Blank Node should be equal to itself");
+            c.Should().Be(c, because: "A Blank Node should be equal to itself");
+            d.Should().Be(d, because: "A Blank Node should be equal to itself");
+            e.Should().Be(e, because: "A Blank Node should be equal to itself");
 
             //Named Nodes
             Guid guid = Guid.NewGuid();
@@ -612,9 +613,9 @@ namespace VDS.RDF.Nodes
             INode two = factory2.CreateBlankNode(guid);
             INode three = factory3.CreateBlankNode(guid);
 
-            Assert.Equal(one, three, "Blank nodes with same ID are equal regardless of factory");
-            Assert.Equal(one, two, "Blank nodes with same ID are equal regardless of factory");
-            Assert.Equal(two, three, "Blank nodes with same ID are equal regardless of factory");
+            three.Should().Be(one, because:"Blank nodes with same ID are equal regardless of factory");
+            two.Should().Be(one, because: "Blank nodes with same ID are equal regardless of factory");
+            three.Should().Be(two, because: "Blank nodes with same ID are equal regardless of factory");
         }
 
         [Fact]
@@ -635,13 +636,13 @@ namespace VDS.RDF.Nodes
                 helloEnUS = factory.CreateLiteralNode("hello", "en-US");
                 helloAgain = factory.CreateLiteralNode("hello");
 
-                Assert.NotEqual(hello, helloEn, "Identical Literals with differing Language Tags are non-equal");
-                Assert.NotEqual(hello, helloEnUS, "Identical Literals with differing Language Tags are non-equal");
-                Assert.NotEqual(helloEn, helloEnUS, "Identical Literals with differing Language Tags are non-equal");
-                Assert.NotEqual(helloEn, helloAgain, "Identical Literals with differing Language Tags are non-equal");
-                Assert.NotEqual(helloEnUS, helloAgain, "Identical Literals with differing Language Tags are non-equal");
+                helloEn.Should().NotBe(hello, because:"Identical Literals with differing Language Tags are non-equal");
+                helloEnUS.Should().NotBe(hello, because: "Identical Literals with differing Language Tags are non-equal");
+                helloEnUS.Should().NotBe(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
+                helloAgain.Should().NotBe(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
+                helloAgain.Should().NotBe(helloEnUS, because: "Identical Literals with differing Language Tags are non-equal");
 
-                Assert.Equal(hello, helloAgain, "Identical Literals with no Language Tag are equal");
+                helloAgain.Should().Be(hello, because: "Identical Literals with no Language Tag are equal");
 
                 //Test Plain Literals
                 INode plain1, plain2, plain3, plain4;
@@ -650,12 +651,12 @@ namespace VDS.RDF.Nodes
                 plain3 = factory.CreateLiteralNode("Plain Literal");
                 plain4 = factory.CreateLiteralNode("plain literal");
 
-                Assert.NotEqual(plain1, plain2, "Literals with non-identical lexical values are non-equal");
-                Assert.NotEqual(plain1, plain3, "Literals with non-identical lexical values are non-equal even if they differ only in case");
-                Assert.Equal(plain1, plain4, "Literals with identical lexical values are equal");
-                Assert.NotEqual(plain2, plain3, "Literals with non-identical lexical values are non-equal");
-                Assert.NotEqual(plain2, plain4, "Literals with non-identical lexical values are non-equal");
-                Assert.NotEqual(plain3, plain4, "Literals with non-identical lexical values are non-equal even if they differ only in case");
+                plain2.Should().NotBe(plain1, because: "Literals with non-identical lexical values are non-equal");
+                plain3.Should().NotBe(plain1, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().Be(plain1, because: "Literals with identical lexical values are equal");
+                plain3.Should().NotBe(plain2, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().NotBe(plain2, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().NotBe(plain3, because: "Literals with non-identical lexical values are non-equal even if they differ only in case");
 
                 //Typed Literals
                 Uri intType = new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger);
@@ -667,36 +668,36 @@ namespace VDS.RDF.Nodes
                 one3 = factory.CreateLiteralNode("0001", intType);
                 one4 = factory.CreateLiteralNode("1", intType);
 
-                Assert.NotEqual(one1, one2, "Literals with identical lexical values but non-identical data types are non-equal");
-                Assert.NotEqual(one1, one3, "Literals with identical lexical values but non-identical data types are non-equal");
-                Assert.NotEqual(one1, one4, "Literals with identical lexical values but non-identical data types are non-equal");
-                Assert.NotEqual(one2, one3, "Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
-                Assert.Equal(one2, one4, "Literals with identical lexical values and identical data types are equal");
-                Assert.NotEqual(one3, one4, "Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
+                one2.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one3.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one4.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one3.Should().NotBe(one2, because:"Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
+                one4.Should().Be(one2, because:"Literals with identical lexical values and identical data types are equal");
+                one4.Should().NotBe(one3, because:"Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
 
-                Assert.NotEqual(0, one1.CompareTo(one2), "Using the Comparer for Literal Nodes which is used for sorting Literals with identical lexical values but non-identical data types are still non-equal");
-                Assert.Equal(0, one2.CompareTo(one3), "Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
-                Assert.Equal(0, one3.CompareTo(one2), "Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
-                Assert.Equal(0, one3.CompareTo(one4), "Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
+                one1.CompareTo(one2).Should().NotBe(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with identical lexical values but non-identical data types are still non-equal");
+                one2.CompareTo(one3).Should().Be(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
+                one3.CompareTo(one2).Should().Be(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
+                one3.CompareTo(one4).Should().Be(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
 
                 INode t, f, one5;
                 t = factory.CreateLiteralNode("true", boolType);
                 f = factory.CreateLiteralNode("false", boolType);
                 one5 = factory.CreateLiteralNode("1", boolType);
 
-                Assert.NotEqual(t, f, "Literals with different lexical values but identical data types are non-equal");
-                Assert.Equal(t, t, "Literals with identical lexical values and identical data types are equal");
-                Assert.Equal(f, f, "Literals with identical lexical values and identical data types are equal");
+                f.Should().NotBe(t, because:"Literals with different lexical values but identical data types are non-equal");
+                t.Should().Be(t, because:"Literals with identical lexical values and identical data types are equal");
+                f.Should().Be(f, because:"Literals with identical lexical values and identical data types are equal");
 
-                Assert.NotEqual(t, one5, "Literals with different data types are non-equal even if their lexical values when cast to that type may be equivalent");
+                one5.Should().NotBe(t, because:"Literals with different data types are non-equal even if their lexical values when cast to that type may be equivalent");
 
                 //Loose Mode Tests
                 Console.WriteLine("Doing a load of Loose Equality Tests");
                 Options.LiteralEqualityMode = LiteralEqualityMode.Loose;
 
-                Assert.Equal(one2, one3, "Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
-                Assert.Equal(one3, one4, "Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
-                Assert.NotEqual(t, one5, "Literals with equivalent lexical values (but which are not in the recognized lexical space of the type i.e. require a cast) and identical data types are still non-equal under Loose Equality Mode");
+                one3.Should().Be(one2, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
+                one4.Should().Be(one3, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
+                one5.Should().NotBe(t, because:"Literals with equivalent lexical values (but which are not in the recognized lexical space of the type i.e. require a cast) and identical data types are still non-equal under Loose Equality Mode");
             }
             finally
             {
@@ -824,23 +825,23 @@ namespace VDS.RDF.Nodes
             INode someLiteral = g.CreateLiteralNode("A Literal");
             INode someBNode = g.CreateBlankNode();
 
-            Assert.Equal(nullUri, nullUri, "Null URI Node should be equal to self");
-            Assert.Equal(nullUri, null, "Null URI Node should be equal to a null");
-            Assert.Equal(null, nullUri, "Null should be equal to a Null URI Node");
-            Assert.NotEqual(nullUri, someUri, "Null URI Node should not be equal to an actual URI Node");
-            Assert.NotEqual(someUri, nullUri, "Null URI Node should not be equal to an actual URI Node");
+            nullUri.Should().Be(nullUri, because:"Null URI Node should be equal to self");
+            nullUri.Should().Be(null, because: "Null URI Node should be equal to a null");
+            nullUri.Should().Be(null, because:"Null should be equal to a Null URI Node");
+            someUri.Should().NotBe(nullUri, because:"Null URI Node should not be equal to an actual URI Node");
+            nullUri.Should().NotBe(someUri, because:"Null URI Node should not be equal to an actual URI Node");
 
-            Assert.Equal(nullLiteral, nullLiteral, "Null Literal Node should be equal to self");
-            Assert.Equal(nullLiteral, null, "Null Literal Node should be equal to a null");
-            Assert.Equal(null, nullLiteral, "Null should be equal to a Null Literal Node");
-            Assert.NotEqual(nullLiteral, someLiteral, "Null Literal Node should not be equal to an actual Literal Node");
-            Assert.NotEqual(someLiteral, nullLiteral, "Null Literal Node should not be equal to an actual Literal Node");
+            nullLiteral.Should().Be(nullLiteral, because:"Null Literal Node should be equal to self");
+            nullLiteral.Should().Be(null, because: "Null Literal Node should be equal to a null");
+            nullLiteral.Should().Be(null, because:"Null should be equal to a Null Literal Node");
+            someLiteral.Should().NotBe(nullLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
+            nullLiteral.Should().NotBe(someLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
 
-            Assert.Equal(nullBNode, nullBNode, "Null BNode Node should be equal to self");
-            Assert.Equal(nullBNode, null, "Null BNode Node should be equal to a null");
-            Assert.Equal(null, nullBNode, "Null should be equal to a Null BNode Node");
-            Assert.NotEqual(nullBNode, someBNode, "Null BNode Node should not be equal to an actual BNode Node");
-            Assert.NotEqual(someBNode, nullBNode, "Null BNode Node should not be equal to an actual BNode Node");
+            nullBNode.Should().Be(nullBNode, because:"Null BNode Node should be equal to self");
+            nullBNode.Should().Be(null, because:"Null BNode Node should be equal to a null");
+            nullBNode.Should().Be(null, because:"Null should be equal to a Null BNode Node");
+            someBNode.Should().NotBe(nullBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
+            nullBNode.Should().NotBe(someBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
         }
     }
 }

@@ -28,7 +28,6 @@ using VDS.RDF.Collections;
 
 namespace VDS.RDF.Graphs
 {
-    [TestFixture]
     public class TrieIndexedGraphContractTests
         : AbstractGraphContractTests
     {

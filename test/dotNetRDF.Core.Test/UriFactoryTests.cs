@@ -30,13 +30,12 @@ using VDS.RDF.Namespaces;
 
 namespace VDS.RDF
 {
-    [TestFixture]
     public class UriFactoryTests
     {
         private static void TestUriResolution(String uri, Uri baseUri, String expected, bool expectAbsolute)
         {
             Uri u = UriFactory.ResolveUri(uri, baseUri);
-            if (ReferenceEquals(expected, null)) Assert.Fail("Expected URI resolution to fail");
+            Assert.False(ReferenceEquals(expected, null), "Expected URI resolution to fail");
             Assert.Equal(expected, expectAbsolute ? u.AbsoluteUri : u.ToString());
         }
 
@@ -48,7 +47,7 @@ namespace VDS.RDF
         private static void TestPrefixedNameResolution(string prefixedName, INamespaceMapper nsmap, Uri baseUri, bool allowDefaultPrefixFallback, string expected)
         {
             Uri u = UriFactory.ResolvePrefixedName(prefixedName, nsmap, baseUri, allowDefaultPrefixFallback);
-            if (ReferenceEquals(expected, null)) Assert.Fail("Expected URI resolution to fail");
+            Assert.False(ReferenceEquals(expected, null), "Expected URI resolution to fail");
             Assert.Equal(expected, u.AbsoluteUri);
         }
 
@@ -76,16 +75,22 @@ namespace VDS.RDF
             TestUriResolution("file.ext", new Uri("/path", UriKind.Relative), "file.ext", false);
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void UriResolutionBad1()
         {
-            TestUriResolution("file:/file.ext", new Uri("http://example.org"), null, false);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestUriResolution("file:/file.ext", new Uri("http://example.org"), null, false);
+            });
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void UriResolutionBad2()
         {
-            TestUriResolution(null, new Uri("http://example.org"), null, false);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestUriResolution(null, new Uri("http://example.org"), null, false);
+            });
         }
 
         [Fact]
@@ -126,49 +131,64 @@ namespace VDS.RDF
             TestPrefixedNameResolution(":test", nsmap, new Uri("http://example.org/ns#"), true, "http://example.org/ns#test");
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void PrefixedNameResolutionBad1()
         {
             INamespaceMapper nsmap = new NamespaceMapper();
 
-            // Namespace not in scope
-            TestPrefixedNameResolution("ex:test", nsmap, null, null);
+            Assert.Throws<RdfException>(() =>
+            {
+                // Namespace not in scope
+                TestPrefixedNameResolution("ex:test", nsmap, null, null);
+            });
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void PrefixedNameResolutionBad2()
         {
             INamespaceMapper nsmap = new NamespaceMapper();
 
             // Namespace not in scope and default namespace fallback not applicable
-            TestPrefixedNameResolution("ex:test", nsmap, new Uri("http://example.org"), null);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestPrefixedNameResolution("ex:test", nsmap, new Uri("http://example.org"), null);
+            });
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void PrefixedNameResolutionBad3()
         {
             INamespaceMapper nsmap = new NamespaceMapper();
 
             // Namespace not in scope and default namespace fallback not allowed
-            TestPrefixedNameResolution(":test", nsmap, new Uri("http://example.org"), null);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestPrefixedNameResolution(":test", nsmap, new Uri("http://example.org"), null);
+            });
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void PrefixedNameResolutionBad4()
         {
             INamespaceMapper nsmap = new NamespaceMapper();
 
             // Namespace not in scope and default namespace fallback not possible due to relative base URI
-            TestPrefixedNameResolution(":test", nsmap, new Uri("file.ext", UriKind.Relative), true, null);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestPrefixedNameResolution(":test", nsmap, new Uri("file.ext", UriKind.Relative), true, null);
+            });
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void PrefixedNameResolutionBad5()
         {
             INamespaceMapper nsmap = new NamespaceMapper();
 
             // Namespace not in scope and default namespace fallback not possible due to null base URI
-            TestPrefixedNameResolution(":test", nsmap, null, true, null);
+            Assert.Throws<RdfException>(() =>
+            {
+                TestPrefixedNameResolution(":test", nsmap, null, true, null);
+            });
         }
 
         [Fact]
@@ -289,11 +309,14 @@ namespace VDS.RDF
             }
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void UriResolutionUriProvidedToQNameMethod()
         {
-                IGraph g = new Graph();
+            IGraph g = new Graph();
+            Assert.Throws<RdfException>(() =>
+            {
                 g.CreateUriNode("http://example.org");
+            });
         }
 
         [Fact]

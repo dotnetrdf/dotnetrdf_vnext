@@ -35,7 +35,6 @@ namespace VDS.RDF.Graphs
     /// <summary>
     /// Abstract tests for <see cref="IGraph"/> implementations
     /// </summary>
-    [TestFixture]
     public abstract class AbstractGraphContractTests
         : AbstractNodeFactoryContractTests
     {
@@ -50,19 +49,10 @@ namespace VDS.RDF.Graphs
         /// <returns></returns>
         protected abstract IGraph CreateGraphInstance();
 
-        protected void Incapable()
-        {
-            Assert.Ignore("Graph does not provide the necessary capabilities for this test to run");
-        }
 
-        protected void Incapable(String message)
+        protected bool ProvidesAccess(IGraph g, GraphAccessMode mode)
         {
-            Assert.Ignore(message);
-        }
-
-        protected void RequireAccess(IGraph g, GraphAccessMode mode)
-        {
-            if (g.Capabilities.AccessMode < mode) this.Incapable(String.Format("Test requires graph access {0} but graph only provides {1}", mode, g.Capabilities.AccessMode));
+            return g.Capabilities.AccessMode >= mode;
         }
 
         protected IEnumerable<Triple> GenerateTriples(int n)
@@ -77,7 +67,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractCount1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.Read);
+            if (!this.ProvidesAccess(g, GraphAccessMode.Read)) return;
 
             Assert.Equal(0, g.Count);
         }
@@ -86,7 +76,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractCount2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             g.Assert(this.GenerateTriples(1));
             Assert.Equal(1, g.Count);
@@ -96,7 +86,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractCount3()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             g.Assert(this.GenerateTriples(100));
             Assert.Equal(100, g.Count);
@@ -106,7 +96,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractIsEmpty1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.Read);
+            if (!this.ProvidesAccess(g, GraphAccessMode.Read)) return;
 
             Assert.True(g.IsEmpty);
         }
@@ -115,7 +105,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractIsEmpty2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             g.Assert(this.GenerateTriples(1));
             Assert.False(g.IsEmpty);
@@ -125,7 +115,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractNamespaces1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.Read);
+            if (!this.ProvidesAccess(g, GraphAccessMode.Read)) return;
 
             Assert.NotNull(g.Namespaces);
         }
@@ -134,7 +124,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractNamespaces2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.NotNull(g.Namespaces);
             g.Namespaces.AddNamespace("ex", new Uri("http://example.org"));
@@ -146,7 +136,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractAssert1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -169,7 +159,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractAssert2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -200,7 +190,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractRetract1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -223,7 +213,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractRetract2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -254,7 +244,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractTriples1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -287,7 +277,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractTriples2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -331,8 +321,12 @@ namespace VDS.RDF.Graphs
         public void GraphContractTriples3()
         {
             IGraph g = this.CreateGraphInstance();
-            if (!g.Capabilities.CanModifyDuringIteration) this.Incapable();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!g.Capabilities.CanModifyDuringIteration)
+            {
+                // Graph does not have the capability to run this test
+                return;
+            }
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Triples.Any());
@@ -365,7 +359,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractQuads1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.False(g.Quads.Any());
@@ -420,7 +414,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractFind1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.True(g.IsEmpty);
@@ -467,7 +461,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractFind2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.True(g.IsEmpty);
@@ -526,7 +520,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractFind3()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.True(g.IsEmpty);
@@ -577,7 +571,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractStructure1()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.True(g.IsEmpty);
@@ -611,7 +605,7 @@ namespace VDS.RDF.Graphs
         public void GraphContractStructure2()
         {
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.Equal(0, g.Count);
             Assert.True(g.IsEmpty);
@@ -646,7 +640,7 @@ namespace VDS.RDF.Graphs
         {
             //Create a new Empty Graph
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.NotNull(g);
 
@@ -708,7 +702,7 @@ namespace VDS.RDF.Graphs
         {
             //Create a new Empty Graph
             IGraph g = this.CreateGraphInstance();
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             Assert.NotNull(g);
 
@@ -741,8 +735,12 @@ namespace VDS.RDF.Graphs
         public void GraphContractEvents1()
         {
             IEventedGraph g = this.CreateGraphInstance() as IEventedGraph;
-            if (g == null || !g.HasEvents) this.Incapable("Graph instance does not support events");
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (g == null || !g.HasEvents)
+            {
+                // Graph does not support events
+                return;
+            }
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             // Attach event handler
             int events = 0;
@@ -766,8 +764,13 @@ namespace VDS.RDF.Graphs
         public void GraphContractEvents2()
         {
             IEventedGraph g = this.CreateGraphInstance() as IEventedGraph;
-            if (g == null || !g.HasEvents) this.Incapable("Graph instance does not support events");
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (g == null || !g.HasEvents)
+            {
+                // Graph does not support events
+                return;
+            }
+
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             // Attach event handler
             int events = 0;
@@ -797,8 +800,13 @@ namespace VDS.RDF.Graphs
         public void GraphContractEvents3()
         {
             IEventedGraph g = this.CreateGraphInstance() as IEventedGraph;
-            if (g == null || !g.HasEvents) this.Incapable("Graph instance does not support events");
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (g == null || !g.HasEvents)
+            {
+                // Graph does not support events
+                return;
+            }
+
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             // Attach event handler
             int events = 0;
@@ -819,8 +827,13 @@ namespace VDS.RDF.Graphs
         public void GraphContractEvents4()
         {
             IEventedGraph g = this.CreateGraphInstance() as IEventedGraph;
-            if (g == null || !g.HasEvents) this.Incapable("Graph instance does not support events");
-            this.RequireAccess(g, GraphAccessMode.ReadWrite);
+            if (g == null || !g.HasEvents)
+            {
+                // Graph does not support events
+                return;
+            }
+
+            if (!this.ProvidesAccess(g, GraphAccessMode.ReadWrite)) return;
 
             // Attach event handler
             int events = 0, totalChanges = 0;

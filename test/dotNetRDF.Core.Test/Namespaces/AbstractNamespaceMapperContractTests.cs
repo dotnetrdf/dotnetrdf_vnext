@@ -30,7 +30,6 @@ using VDS.RDF.Nodes;
 
 namespace VDS.RDF.Namespaces
 {
-    [TestFixture]
     public abstract class AbstractNamespaceMapperContractTests
     {
         /// <summary>
@@ -93,7 +92,7 @@ namespace VDS.RDF.Namespaces
             Assert.False(EqualityHelper.AreUrisEqual(u1, nsmap.GetNamespaceUri("ex")));
         }
 
-        [Test, ExpectedException(typeof(RdfException))]
+        [Fact]
         public void NamespaceMapperContractAddBad1()
         {
             INamespaceMapper nsmap = this.GetInstance();
@@ -101,21 +100,26 @@ namespace VDS.RDF.Namespaces
 
             // Relative namespace URIs are forbidden
             Uri u = new Uri("file.ext", UriKind.Relative);
-            nsmap.AddNamespace("ex", u);
+            Assert.Throws<RdfException>(() =>
+            {
+                nsmap.AddNamespace("ex", u);
+            });
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void NamespaceMapperContractAddBad2()
         {
             INamespaceMapper nsmap = this.GetInstance();
             Assert.Equal(0, nsmap.Prefixes.Count());
 
             // Null namespace URIs are forbidden
-            nsmap.AddNamespace("ex", null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                nsmap.AddNamespace("ex", null);
+            });
         }
     }
 
-    [TestFixture]
     public class NamespaceMapperContractTests
         : AbstractNamespaceMapperContractTests
     {
@@ -125,7 +129,6 @@ namespace VDS.RDF.Namespaces
         }
     }
 
-    [TestFixture]
     public class NestedNamespaceMapperContractTests
         : AbstractNamespaceMapperContractTests
     {

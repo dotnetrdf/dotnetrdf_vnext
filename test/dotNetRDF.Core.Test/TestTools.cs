@@ -33,6 +33,7 @@ using VDS.RDF.Graphs;
 using VDS.RDF.Graphs.Utilities;
 using VDS.RDF.Nodes;
 using VDS.RDF.Writing.Formatting;
+using FluentAssertions;
 
 namespace VDS.RDF
 {
@@ -93,7 +94,7 @@ namespace VDS.RDF
                 {
                     //Different number of Triples so must be non-equal
                     //We know this Assertion should succeed based on our previous IF but should Assert anyway
-                    Assert.NotEqual(g.Count, h.Count, "Two non-equivalent Graphs should have different numbers of Triples");
+                    h.Count.Should().NotBe(g.Count, because: "Two non-equivalent Graphs should have different numbers of Triples");
                 }
                 else
                 {
@@ -242,13 +243,13 @@ namespace VDS.RDF
             Console.WriteLine(message);
         }
 
-        public static void TestInMtaThread(ThreadStart info)
-        {
-            Thread t = new Thread(info);
-            t.SetApartmentState(ApartmentState.MTA);
-            t.Start();
-            t.Join();
-        }
+        //public static void TestInMtaThread(ThreadStart info)
+        //{
+        //    Thread t = new Thread(info);
+        //    t.SetApartmentState(ApartmentState.MTA);
+        //    t.Start();
+        //    t.Join();
+        //}
 
         public static void PrintEnumerable<T>(IEnumerable<T> items, String sep)
             where T : class
@@ -288,8 +289,8 @@ namespace VDS.RDF
 
         public static void ExecuteWithChangedCulture(CultureInfo cultureInfoOverride, Action test)
         {
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = cultureInfoOverride;
+            var currentCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = cultureInfoOverride;
 
             try
             {
@@ -297,7 +298,7 @@ namespace VDS.RDF
             }
             finally
             {
-                Thread.CurrentThread.CurrentCulture = currentCulture;
+                CultureInfo.CurrentCulture = currentCulture;
             }
         }
 

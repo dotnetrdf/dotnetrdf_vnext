@@ -31,14 +31,12 @@ using VDS.RDF.Specifications;
 
 namespace VDS.RDF.Nodes
 {
-    [TestFixture]
     public class ValuedNodeTests
         : BaseTest
     {
         private IGraph _graph;
 
-        [SetUp]
-        public void Setup()
+        public ValuedNodeTests()
         {
             _graph = new Graph();
         }

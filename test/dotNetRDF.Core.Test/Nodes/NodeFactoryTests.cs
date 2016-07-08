@@ -27,7 +27,6 @@ using Xunit;
 
 namespace VDS.RDF.Nodes
 {
-    [TestFixture]
     public class NodeFactoryTests
         : AbstractNodeFactoryContractTests
     {

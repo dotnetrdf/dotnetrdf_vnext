@@ -27,7 +27,6 @@ using Xunit;
 
 namespace VDS.RDF.Graphs
 {
-    [TestFixture]
     public class GraphContractTests
         : AbstractGraphContractTests
     {
