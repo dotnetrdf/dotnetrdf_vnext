@@ -200,15 +200,7 @@ namespace VDS.RDF.Writing
         /// <param name="output">Stream to save to</param>
         public override void Save(IGraph g, TextWriter output)
         {
-            try
-            {
-                this.GenerateOutput(g, output);
-                output.Close();
-            }
-            finally
-            {
-                output.CloseQuietly();
-            }
+            this.GenerateOutput(g, output);
         }
 
         /// <summary>
@@ -353,7 +345,6 @@ namespace VDS.RDF.Writing
 
             //Save to the Output Stream
             context.Writer.Flush();
-            context.Writer.Close();
         }
 
         private void GenerateSubjectOutput(RdfXmlWriterContext context, List<Triple> ts, bool allowRdfDescription)
