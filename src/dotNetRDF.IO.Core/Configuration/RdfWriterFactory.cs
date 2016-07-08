@@ -68,10 +68,11 @@ namespace VDS.RDF.Configuration
         /// <returns></returns>
         public bool CanLoadObject(Type t)
         {
+            var typeInfo = t.GetTypeInfo();
             //We can load any object which implements any writer interface and has a public unparameterized constructor
-            if (t.GetInterfaces().Any(i => this._rdfWriterType.Equals(i)))
+            if (typeInfo.GetInterfaces().Any(i => this._rdfWriterType.Equals(i)))
             {
-                ConstructorInfo c = t.GetConstructor(new Type[0]);
+                ConstructorInfo c = typeInfo.GetConstructor(new Type[0]);
                 if (c != null)
                 {
                     return c.IsPublic;

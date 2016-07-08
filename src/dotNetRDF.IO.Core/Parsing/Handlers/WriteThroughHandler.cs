@@ -125,7 +125,7 @@ namespace VDS.RDF.Parsing.Handlers
                 this._formattingMapper = new QNameOutputMapper();
 
                 //Instantiate a new Formatter
-                ConstructorInfo[] cs = this._formatterType.GetConstructors();
+                ConstructorInfo[] cs = this._formatterType.GetTypeInfo().GetConstructors();
                 Type qnameMapperType = typeof(QNameOutputMapper);
                 Type nsMapperType = typeof(INamespaceMapper);
                 foreach (ConstructorInfo c in cs.OrderByDescending(c => c.GetParameters().Count()))
