@@ -29,7 +29,7 @@ using System.Linq;
 using Xunit;
 using VDS.RDF.Graphs;
 using VDS.RDF.Namespaces;
-using VDS.RDF.Parsing;
+using VDS.RDF;
 using VDS.RDF.Specifications;
 using FluentAssertions;
 
