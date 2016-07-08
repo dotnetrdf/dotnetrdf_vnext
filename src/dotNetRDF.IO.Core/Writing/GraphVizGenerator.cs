@@ -130,7 +130,6 @@ namespace VDS.RDF.Writing
                         writer.Write(buffer, 0, read);
                     }
                 }
-                gvz.Close();
             }
 
             //Open if requested

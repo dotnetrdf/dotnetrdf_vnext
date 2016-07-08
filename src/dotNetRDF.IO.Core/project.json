@@ -4,7 +4,8 @@
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "Microsoft.Extensions.DependencyModel": "1.0.0",
-    "dotNetRDF.Core": "2.0.0"
+    "dotNetRDF.Core": "2.0.0",
+    "System.Diagnostics.Process": "4.1.0"
   },
 
   "frameworks": {
