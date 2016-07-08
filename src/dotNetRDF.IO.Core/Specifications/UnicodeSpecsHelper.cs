@@ -77,12 +77,9 @@ namespace VDS.RDF.Specifications
 
         private static UnicodeCategory GetUnicodeCategory(char c)
         {
-#if PORTABLE
             return CharUnicodeInfo.GetUnicodeCategory(c);
-#else
-            return Char.GetUnicodeCategory(c);
-#endif
         }
+
         /// <summary>
         /// Checks whether a given Character is considered a Letter or Digit
         /// </summary>
