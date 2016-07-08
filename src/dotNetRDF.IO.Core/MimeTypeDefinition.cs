@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using VDS.RDF.Parsing;
 using VDS.RDF.Writing;
@@ -290,7 +291,7 @@ namespace VDS.RDF
 
         private bool EnsureObjectParserInterface(Type t, Type obj)
         {
-            bool ok = t.GetInterfaces().Where(i => i.IsGenericType).Any(i => i.GetGenericArguments().First() == obj);
+            bool ok = t.GetInterfaces().Where(i => i.GetTypeInfo().IsGenericType).Any(i => i.GetGenericArguments().First() == obj);
             if (!ok)
             {
                 throw new RdfException("Cannot use Type " + t.FullName + " as an Object Parser for the Type " + obj.FullName + " as it does not implement the required interface IObjectParser<" + obj.Name + ">");
