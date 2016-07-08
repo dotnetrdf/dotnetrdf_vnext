@@ -183,17 +183,10 @@ namespace VDS.RDF.Writing
         /// <param name="output">Stream to save to</param>
         public override void Save(IGraph g, TextWriter output)
         {
-            try
-            {
-                //Create the Writing Context
-                g.Namespaces.Import(this._defaultNamespaces);
-                CompressingTurtleWriterContext context = new CompressingTurtleWriterContext(g, output, this._compressionLevel, this._prettyprint, this._allowHiSpeed, this._syntax);
-                this.GenerateOutput(context);
-            }
-            finally
-            {
-                output.CloseQuietly();
-            }
+            //Create the Writing Context
+            g.Namespaces.Import(this._defaultNamespaces);
+            CompressingTurtleWriterContext context = new CompressingTurtleWriterContext(g, output, this._compressionLevel, this._prettyprint, this._allowHiSpeed, this._syntax);
+            this.GenerateOutput(context);
         }
 
         /// <summary>

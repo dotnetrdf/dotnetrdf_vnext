@@ -83,17 +83,10 @@ namespace VDS.RDF.Writing
             if (g == null) throw new RdfOutputException("Cannot output a null Graph");
             if (writer == null) throw new RdfOutputException("Cannot output to a null writer");
 
-            try
+            NQuadsFormatter formatter = new NQuadsFormatter();
+            foreach (Triple t in g.Triples)
             {
-                NQuadsFormatter formatter = new NQuadsFormatter();
-                foreach (Triple t in g.Triples)
-                {
-                    writer.WriteLine(formatter.Format(t));
-                }
-            }
-            finally
-            {
-                writer.CloseQuietly();
+                writer.WriteLine(formatter.Format(t));
             }
         }
 
@@ -107,17 +100,10 @@ namespace VDS.RDF.Writing
             if (store == null) throw new RdfOutputException("Cannot output a null Graph Store");
             if (writer == null) throw new RdfOutputException("Cannot output to a null writer");
 
-            try
+            NQuadsFormatter formatter = new NQuadsFormatter();
+            foreach (Quad q in store.Quads)
             {
-                NQuadsFormatter formatter = new NQuadsFormatter();
-                foreach (Quad q in store.Quads)
-                {
-                    writer.WriteLine(formatter.Format(q));
-                }
-            }
-            finally
-            {
-                writer.CloseQuietly();
+                writer.WriteLine(formatter.Format(q));
             }
         }
 

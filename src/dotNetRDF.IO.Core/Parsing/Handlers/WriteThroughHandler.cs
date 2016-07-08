@@ -181,7 +181,6 @@ namespace VDS.RDF.Parsing.Handlers
             }
             if (this._closeOnEnd)
             {
-                this._writer.Close();
                 this._writer = null;
             }
         }

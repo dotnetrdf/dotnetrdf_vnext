@@ -98,20 +98,13 @@ namespace VDS.RDF.Writing
         /// <param name="output">Stream to save to</param>
         public override void Save(IGraph g, TextWriter output)
         {
-            try
-            {
-                NTriplesWriterContext context = new NTriplesWriterContext(g, output, this.Syntax);
-                List<Triple> ts = g.Triples.ToList();
-                if (this._sort) ts.Sort(new FullTripleComparer(new FastNodeComparer()));
+            NTriplesWriterContext context = new NTriplesWriterContext(g, output, this.Syntax);
+            List<Triple> ts = g.Triples.ToList();
+            if (this._sort) ts.Sort(new FullTripleComparer(new FastNodeComparer()));
 
-                foreach (Triple t in ts)
-                {
-                    output.WriteLine(this.TripleToNTriples(context, t));
-                }
-            }
-            finally
+            foreach (Triple t in ts)
             {
-                output.CloseQuietly();
+                output.WriteLine(this.TripleToNTriples(context, t));
             }
         }
 

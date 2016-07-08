@@ -87,40 +87,6 @@ namespace VDS.RDF
         }
 
         /// <summary>
-        /// Closes input suppressing any errors that occur closing the input
-        /// </summary>
-        /// <param name="input">Input</param>
-        public static void CloseQuietly(this TextReader input)
-        {
-            try
-            {
-                input.Close();
-            }
-            catch
-            {
-                // No catch actions, just cleaning up
-                // TODO In the future this should ideally log somewhere
-            }
-        }
-
-        /// <summary>
-        /// Closes output suppressing any errors that occur closing the output
-        /// </summary>
-        /// <param name="output">Output</param>
-        public static void CloseQuietly(this TextWriter output)
-        {
-            try
-            {
-                output.Close();
-            }
-            catch
-            {
-                // No catch actions, just cleaning up
-                // TODO In the future this should ideally log somewhere
-            }
-        }
-
-        /// <summary>
         /// Method for Loading a Graph from some Concrete RDF Syntax via some arbitrary Input
         /// </summary>
         /// <param name="parser">RDF parser to use</param>

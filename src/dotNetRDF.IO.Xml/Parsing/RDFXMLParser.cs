@@ -179,10 +179,6 @@ namespace VDS.RDF.Parsing
                 //Wrap in a RDF Parse Exception
                 throw new RdfParseException("Unable to Parse this RDF/XML due to an IO Exception, see Inner Exception for details of the IO exception that occurred", ioEx);
             }
-            finally
-            {
-                input.CloseQuietly();
-            }
         }
 
         #endregion

@@ -110,18 +110,11 @@ namespace VDS.RDF.Writing
                 context.NodeFormatter = new UncompressedTurtleFormatter();
             }
 
-            try
+            foreach (INode graphName in context.GraphStore.GraphNames)
             {
-                foreach (INode graphName in context.GraphStore.GraphNames)
-                {
-                    context.CurrentGraphName = graphName;
-                    context.CurrentGraph = context.GraphStore[graphName];
-                    this.GenerateGraphOutput(context);
-                }
-            }
-            finally
-            {
-                context.Output.CloseQuietly();
+                context.CurrentGraphName = graphName;
+                context.CurrentGraph = context.GraphStore[graphName];
+                this.GenerateGraphOutput(context);
             }
         }
 

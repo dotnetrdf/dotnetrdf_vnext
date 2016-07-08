@@ -745,7 +745,6 @@ namespace VDS.RDF.Parsing.Tokens
         /// <returns></returns>
         protected RdfParseException Error(String detail)
         {
-            this._reader.Close();
             if (detail.Contains("{0}"))
             {
                 return new RdfParseException("[Line " + this._currline + " Column " + this._currpos + "] " + String.Format(detail, this._format), this._currline, this._currpos);

@@ -154,7 +154,6 @@ namespace VDS.RDF.Parsing
                 RaiseWarning("Attempting to select parser based on analysis of the data file, this requires loading the file into memory");
                 StreamReader reader = new StreamReader(filename);
                 String data = reader.ReadToEnd();
-                reader.Close();
                 parser = StringParser.GetParser(data);
                 RaiseWarning("Used the StringParser to guess the parser to use - it guessed " + parser.GetType().Name);
                 parser.Warning += RaiseWarning;

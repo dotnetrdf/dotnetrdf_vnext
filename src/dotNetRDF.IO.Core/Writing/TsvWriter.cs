@@ -63,52 +63,38 @@ namespace VDS.RDF.Writing
         /// <param name="output">Writer to save to</param>
         public void Save(IGraph g, TextWriter output)
         {
-            try
+            foreach (Triple t in g.Triples)
             {
-                foreach (Triple t in g.Triples)
-                {
-                    this.GenerateNodeOutput(output, t.Subject, QuadSegment.Subject);
-                    output.Write('\t');
-                    this.GenerateNodeOutput(output, t.Predicate, QuadSegment.Predicate);
-                    output.Write('\t');
-                    this.GenerateNodeOutput(output, t.Object, QuadSegment.Object);
-                    output.Write('\n');
-                }
-            }
-            finally
-            {
-                output.CloseQuietly();
+                this.GenerateNodeOutput(output, t.Subject, QuadSegment.Subject);
+                output.Write('\t');
+                this.GenerateNodeOutput(output, t.Predicate, QuadSegment.Predicate);
+                output.Write('\t');
+                this.GenerateNodeOutput(output, t.Object, QuadSegment.Object);
+                output.Write('\n');
             }
         }
 
         public void Save(IGraphStore graphStore, TextWriter output)
         {
-            try
+            foreach (INode graphName in graphStore.GraphNames)
             {
-                foreach (INode graphName in graphStore.GraphNames)
-                {
-                    IGraph g = graphStore[graphName];
+                IGraph g = graphStore[graphName];
 
-                    // Write out quads for the graph
-                    foreach (Quad q in g.Triples.AsQuads(graphName))
+                // Write out quads for the graph
+                foreach (Quad q in g.Triples.AsQuads(graphName))
+                {
+                    this.GenerateNodeOutput(output, q.Subject, QuadSegment.Subject);
+                    output.Write('\t');
+                    this.GenerateNodeOutput(output, q.Predicate, QuadSegment.Predicate);
+                    output.Write('\t');
+                    this.GenerateNodeOutput(output, q.Object, QuadSegment.Object);
+                    if (!q.InDefaultGraph)
                     {
-                        this.GenerateNodeOutput(output, q.Subject, QuadSegment.Subject);
                         output.Write('\t');
-                        this.GenerateNodeOutput(output, q.Predicate, QuadSegment.Predicate);
-                        output.Write('\t');
-                        this.GenerateNodeOutput(output, q.Object, QuadSegment.Object);
-                        if (!q.InDefaultGraph)
-                        {
-                            output.Write('\t');
-                            this.GenerateNodeOutput(output, q.Graph, QuadSegment.Graph);
-                        }
-                        output.WriteLine();
+                        this.GenerateNodeOutput(output, q.Graph, QuadSegment.Graph);
                     }
+                    output.WriteLine();
                 }
-            }
-            finally
-            {
-                output.CloseQuietly();
             }
         }
 

@@ -119,20 +119,13 @@ namespace VDS.RDF.Parsing
             if (handler == null) throw new RdfParseException("Cannot parse an RDF Dataset using a null handler");
             if (input == null) throw new RdfParseException("Cannot parse an RDF Dataset from a null input");
 
-            try
-            {
-                input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
-                profile = profile.EnsureParserProfile();
+            input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
+            profile = profile.EnsureParserProfile();
 
-                //Create the Parser Context and Invoke the Parser
-                TriGParserContext context = new TriGParserContext(handler, new TriGTokeniser(input, this._syntax), this._queueMode, false, this._tracetokeniser, profile);
-                context.Syntax = this._syntax;
-                this.Parse(context);
-            }
-            finally
-            {
-                input.CloseQuietly();
-            }
+            //Create the Parser Context and Invoke the Parser
+            TriGParserContext context = new TriGParserContext(handler, new TriGTokeniser(input, this._syntax), this._queueMode, false, this._tracetokeniser, profile);
+            context.Syntax = this._syntax;
+            this.Parse(context);
         }
 
         private void Parse(TriGParserContext context)
