@@ -37,7 +37,7 @@ namespace VDS.RDF.Writing
     /// <summary>
     /// Possible URI Reference Types
     /// </summary>
-    enum UriRefType : int
+    public enum UriRefType : int
     {
         /// <summary>
         /// Must be a QName
