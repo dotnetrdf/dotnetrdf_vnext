@@ -799,12 +799,12 @@ namespace VDS.RDF.Writing
             if (uri.Contains("#"))
             {
                 //Create a Hash Namespace Uri
-                nsUri = uri.Substring(0, uri.LastIndexOf("#", StringComparison.InvariantCulture) + 1);
+                nsUri = uri.Substring(0, uri.LastIndexOf("#", StringComparison.Ordinal) + 1);
             }
             else
             {
                 //Create a Slash Namespace Uri
-                nsUri = uri.Substring(0, uri.LastIndexOf("/", StringComparison.InvariantCulture) + 1);
+                nsUri = uri.Substring(0, uri.LastIndexOf("/", StringComparison.Ordinal) + 1);
             }
 
             //Create a Temporary Namespace ID
