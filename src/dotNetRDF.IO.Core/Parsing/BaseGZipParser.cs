@@ -161,25 +161,7 @@ namespace VDS.RDF.Parsing
             : base(new Notation3Parser()) { }
     }
 
-    /// <summary>
-    /// Parser for loading GZipped RDF/XML
-    /// </summary>
-    public class GZippedRdfXmlParser
-        : BaseGZipParser
-    {
-        /// <summary>
-        /// Creates a new GZipped RDF/XML parser
-        /// </summary>
-        public GZippedRdfXmlParser()
-            : base(new RdfXmlParser()) { }
-
-        /// <summary>
-        /// Creates a new GZipped RDF/XML parser
-        /// </summary>
-        /// <param name="mode">RDF/XML parser mode</param>
-        public GZippedRdfXmlParser(RdfXmlParserMode mode)
-            : base(new RdfXmlParser(mode)) { }
-    }
+    
 
     public class GZippedNQuadsParser
         : BaseGZipParser
@@ -195,12 +177,6 @@ namespace VDS.RDF.Parsing
             : base(new TriGParser()) { }
     }
 
-    public class GZippedTriXParser
-        : BaseGZipParser
-    {
-        public GZippedTriXParser()
-            : base(new TriXParser()) { }
-    }
 }
 
 #endif

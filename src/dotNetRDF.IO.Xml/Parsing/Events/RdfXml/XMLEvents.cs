@@ -40,8 +40,8 @@ namespace VDS.RDF.Parsing.Events.RdfXml
         /// <summary>
         /// Constants for Event Types
         /// </summary>
-        public const int Root = 0,
-                         Clear = 1,
+        public const int Root = BaseEvent.Root,
+                         Clear = BaseEvent.Clear,
 
                          Element = 10,
                          EndElement = 11,
@@ -910,15 +910,5 @@ namespace VDS.RDF.Parsing.Events.RdfXml
         }
     }
 
-    /// <summary>
-    /// An Event for representing that the Event Queue should be cleared of previously queued events
-    /// </summary>
-    internal class ClearQueueEvent : BaseRdfXmlEvent
-    {
-        /// <summary>
-        /// Creates a new Clear Queue Event
-        /// </summary>
-        public ClearQueueEvent()
-            : base(RdfXmlEvent.Clear, String.Empty) { }
-    }
+    
 }

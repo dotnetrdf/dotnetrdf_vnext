@@ -159,14 +159,12 @@ namespace VDS.RDF.Parsing
                     //Create a new Parser Context and Parse
                     RdfXmlParserContext context = new RdfXmlParserContext(handler, doc, this._traceparsing, profile);
                     this.Parse(context);
-                    input.Close();
                 }
                 else
                 {
 #endif
                     RdfXmlParserContext context = new RdfXmlParserContext(handler, input, profile);
                     this.Parse(context);
-                    input.Close();
 #if !NO_XMLDOM
                 }
 #endif
@@ -1023,9 +1021,10 @@ namespace VDS.RDF.Parsing
             TypedLiteralEvent tlit = (TypedLiteralEvent)lit;
             //At the moment we're just going to ensure that we normalize it to Unicode Normal Form C
             String xmllit = tlit.Value;
-#if !NO_NORM
-            xmllit = xmllit.Normalize();
-#endif
+
+            // TODO: Find a workaround for string normalization
+            // xmllit = xmllit.Normalize();
+
             INode obj = context.Handler.CreateLiteralNode(xmllit, UriFactory.Create(tlit.DataType));
 
             //Assert the Triple
@@ -1515,14 +1514,16 @@ namespace VDS.RDF.Parsing
                         //A Property Attribute
 
                         //Validate the Normalization of the Attribute Value
-#if !NO_NORM
-                        if (!a.Value.IsNormalized())
-                        {
-                            throw ParserHelper.Error("Encountered a Property Attribute '" + a.QName + "' whose value was not correctly normalized in Unicode Normal Form C", "Empty Property Element", a);
-                        }
-                        else
-                        {
-#endif
+
+                        // TODO: Find workaround for lack of IsNormalized
+//#if !NO_NORM
+//                        if (!a.Value.IsNormalized())
+//                        {
+//                            throw ParserHelper.Error("Encountered a Property Attribute '" + a.QName + "' whose value was not correctly normalized in Unicode Normal Form C", "Empty Property Element", a);
+//                        }
+//                        else
+//                        {
+//#endif
                             //Create the Predicate from the Attribute QName
                             pred = context.Handler.CreateUriNode(UriFactory.ResolvePrefixedName(a.QName, context.Namespaces, null));
 
@@ -1538,9 +1539,9 @@ namespace VDS.RDF.Parsing
 
                             //Assert the Property Triple
                             if (!context.Handler.HandleTriple(new Triple(subj, pred, obj))) ParserHelper.Stop();
-#if !NO_NORM
-                        }
-#endif
+//#if !NO_NORM
+//                        }
+//#endif
                     }
                     else if (IsIdAttribute(a) || IsNodeIdAttribute(a) || IsResourceAttribute(a))
                     {
