@@ -596,16 +596,16 @@ namespace VDS.RDF.Nodes
             INode e = factory3.CreateBlankNode();
 
             //Shouldn't be equal
-            c.Should().NotBe(b, because:"Two Anonymous Blank Nodes created by same factory should be non-equal");
-            d.Should().NotBe(c, because:"Anonymous Blank Nodes created by different factories should be non-equal");
-            d.Should().NotBe(b, because:"Anonymous Blank Nodes created by different factories should be non-equal");
-            e.Should().NotBe(d, because:"Anonymous Blank Nodes created by different factories should be non-equal");
+            c.Should().NotBeEqualTo(b, because:"Two Anonymous Blank Nodes created by same factory should be non-equal");
+            d.Should().NotBeEqualTo(c, because:"Anonymous Blank Nodes created by different factories should be non-equal");
+            d.Should().NotBeEqualTo(b, because:"Anonymous Blank Nodes created by different factories should be non-equal");
+            e.Should().NotBeEqualTo(d, because:"Anonymous Blank Nodes created by different factories should be non-equal");
 
             //Should be equal
-            b.Should().Be(b, because:"A Blank Node should be equal to itself");
-            c.Should().Be(c, because: "A Blank Node should be equal to itself");
-            d.Should().Be(d, because: "A Blank Node should be equal to itself");
-            e.Should().Be(e, because: "A Blank Node should be equal to itself");
+            b.Should().BeEqualTo(b, because:"A Blank Node should be equal to itself");
+            c.Should().BeEqualTo(c, because: "A Blank Node should be equal to itself");
+            d.Should().BeEqualTo(d, because: "A Blank Node should be equal to itself");
+            e.Should().BeEqualTo(e, because: "A Blank Node should be equal to itself");
 
             //Named Nodes
             Guid guid = Guid.NewGuid();
@@ -613,9 +613,9 @@ namespace VDS.RDF.Nodes
             INode two = factory2.CreateBlankNode(guid);
             INode three = factory3.CreateBlankNode(guid);
 
-            three.Should().Be(one, because:"Blank nodes with same ID are equal regardless of factory");
-            two.Should().Be(one, because: "Blank nodes with same ID are equal regardless of factory");
-            three.Should().Be(two, because: "Blank nodes with same ID are equal regardless of factory");
+            three.Should().BeEqualTo(one, because:"Blank nodes with same ID are equal regardless of factory");
+            two.Should().BeEqualTo(one, because: "Blank nodes with same ID are equal regardless of factory");
+            three.Should().BeEqualTo(two, because: "Blank nodes with same ID are equal regardless of factory");
         }
 
         [Fact]
@@ -636,13 +636,13 @@ namespace VDS.RDF.Nodes
                 helloEnUS = factory.CreateLiteralNode("hello", "en-US");
                 helloAgain = factory.CreateLiteralNode("hello");
 
-                helloEn.Should().NotBe(hello, because:"Identical Literals with differing Language Tags are non-equal");
-                helloEnUS.Should().NotBe(hello, because: "Identical Literals with differing Language Tags are non-equal");
-                helloEnUS.Should().NotBe(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
-                helloAgain.Should().NotBe(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
-                helloAgain.Should().NotBe(helloEnUS, because: "Identical Literals with differing Language Tags are non-equal");
+                helloEn.Should().NotBeEqualTo(hello, because:"Identical Literals with differing Language Tags are non-equal");
+                helloEnUS.Should().NotBeEqualTo(hello, because: "Identical Literals with differing Language Tags are non-equal");
+                helloEnUS.Should().NotBeEqualTo(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
+                helloAgain.Should().NotBeEqualTo(helloEn, because: "Identical Literals with differing Language Tags are non-equal");
+                helloAgain.Should().NotBeEqualTo(helloEnUS, because: "Identical Literals with differing Language Tags are non-equal");
 
-                helloAgain.Should().Be(hello, because: "Identical Literals with no Language Tag are equal");
+                helloAgain.Should().BeEqualTo(hello, because: "Identical Literals with no Language Tag are equal");
 
                 //Test Plain Literals
                 INode plain1, plain2, plain3, plain4;
@@ -651,12 +651,12 @@ namespace VDS.RDF.Nodes
                 plain3 = factory.CreateLiteralNode("Plain Literal");
                 plain4 = factory.CreateLiteralNode("plain literal");
 
-                plain2.Should().NotBe(plain1, because: "Literals with non-identical lexical values are non-equal");
-                plain3.Should().NotBe(plain1, because: "Literals with non-identical lexical values are non-equal");
-                plain4.Should().Be(plain1, because: "Literals with identical lexical values are equal");
-                plain3.Should().NotBe(plain2, because: "Literals with non-identical lexical values are non-equal");
-                plain4.Should().NotBe(plain2, because: "Literals with non-identical lexical values are non-equal");
-                plain4.Should().NotBe(plain3, because: "Literals with non-identical lexical values are non-equal even if they differ only in case");
+                plain2.Should().NotBeEqualTo(plain1, because: "Literals with non-identical lexical values are non-equal");
+                plain3.Should().NotBeEqualTo(plain1, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().BeEqualTo(plain1, because: "Literals with identical lexical values are equal");
+                plain3.Should().NotBeEqualTo(plain2, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().NotBeEqualTo(plain2, because: "Literals with non-identical lexical values are non-equal");
+                plain4.Should().NotBeEqualTo(plain3, because: "Literals with non-identical lexical values are non-equal even if they differ only in case");
 
                 //Typed Literals
                 Uri intType = new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger);
@@ -668,12 +668,12 @@ namespace VDS.RDF.Nodes
                 one3 = factory.CreateLiteralNode("0001", intType);
                 one4 = factory.CreateLiteralNode("1", intType);
 
-                one2.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
-                one3.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
-                one4.Should().NotBe(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
-                one3.Should().NotBe(one2, because:"Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
-                one4.Should().Be(one2, because:"Literals with identical lexical values and identical data types are equal");
-                one4.Should().NotBe(one3, because:"Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
+                one2.Should().NotBeEqualTo(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one3.Should().NotBeEqualTo(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one4.Should().NotBeEqualTo(one1, because:"Literals with identical lexical values but non-identical data types are non-equal");
+                one3.Should().NotBeEqualTo(one2, "Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
+                one4.Should().BeEqualTo(one2, because:"Literals with identical lexical values and identical data types are equal");
+                one4.Should().NotBeEqualTo(one3, because:"Literals with equivalent values represented as different lexical values are non-equal even when they're data types are equal");
 
                 one1.CompareTo(one2).Should().NotBe(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with identical lexical values but non-identical data types are still non-equal");
                 one2.CompareTo(one3).Should().Be(0, because:"Using the Comparer for Literal Nodes which is used for sorting Literals with equivalent non-identical lexical values are considered equal when their data types are equal");
@@ -685,19 +685,19 @@ namespace VDS.RDF.Nodes
                 f = factory.CreateLiteralNode("false", boolType);
                 one5 = factory.CreateLiteralNode("1", boolType);
 
-                f.Should().NotBe(t, because:"Literals with different lexical values but identical data types are non-equal");
-                t.Should().Be(t, because:"Literals with identical lexical values and identical data types are equal");
-                f.Should().Be(f, because:"Literals with identical lexical values and identical data types are equal");
+                f.Should().NotBeEqualTo(t, because:"Literals with different lexical values but identical data types are non-equal");
+                t.Should().BeEqualTo(t, because:"Literals with identical lexical values and identical data types are equal");
+                f.Should().BeEqualTo(f, because:"Literals with identical lexical values and identical data types are equal");
 
-                one5.Should().NotBe(t, because:"Literals with different data types are non-equal even if their lexical values when cast to that type may be equivalent");
+                one5.Should().NotBeEqualTo(t, because:"Literals with different data types are non-equal even if their lexical values when cast to that type may be equivalent");
 
                 //Loose Mode Tests
                 Console.WriteLine("Doing a load of Loose Equality Tests");
                 Options.LiteralEqualityMode = LiteralEqualityMode.Loose;
 
-                one3.Should().Be(one2, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
-                one4.Should().Be(one3, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
-                one5.Should().NotBe(t, because:"Literals with equivalent lexical values (but which are not in the recognized lexical space of the type i.e. require a cast) and identical data types are still non-equal under Loose Equality Mode");
+                one3.Should().BeEqualTo(one2, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
+                one4.Should().BeEqualTo(one3, because:"Literals with equivalent lexical values and identical data types can be considered equal under Loose Equality Mode");
+                one5.Should().NotBeEqualTo(t, because:"Literals with equivalent lexical values (but which are not in the recognized lexical space of the type i.e. require a cast) and identical data types are still non-equal under Loose Equality Mode");
             }
             finally
             {
@@ -825,23 +825,23 @@ namespace VDS.RDF.Nodes
             INode someLiteral = g.CreateLiteralNode("A Literal");
             INode someBNode = g.CreateBlankNode();
 
-            nullUri.Should().Be(nullUri, because:"Null URI Node should be equal to self");
-            nullUri.Should().Be(null, because: "Null URI Node should be equal to a null");
-            nullUri.Should().Be(null, because:"Null should be equal to a Null URI Node");
-            someUri.Should().NotBe(nullUri, because:"Null URI Node should not be equal to an actual URI Node");
-            nullUri.Should().NotBe(someUri, because:"Null URI Node should not be equal to an actual URI Node");
+            nullUri.Should().BeEqualTo(nullUri, because:"Null URI Node should be equal to self");
+            nullUri.Should().BeEqualTo(null, because: "Null URI Node should be equal to a null");
+            nullUri.Should().BeEqualTo(null, because:"Null should be equal to a Null URI Node");
+            someUri.Should().NotBeEqualTo(nullUri, because:"Null URI Node should not be equal to an actual URI Node");
+            nullUri.Should().NotBeEqualTo(someUri, because:"Null URI Node should not be equal to an actual URI Node");
 
-            nullLiteral.Should().Be(nullLiteral, because:"Null Literal Node should be equal to self");
-            nullLiteral.Should().Be(null, because: "Null Literal Node should be equal to a null");
-            nullLiteral.Should().Be(null, because:"Null should be equal to a Null Literal Node");
-            someLiteral.Should().NotBe(nullLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
-            nullLiteral.Should().NotBe(someLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
+            nullLiteral.Should().BeEqualTo(nullLiteral, because:"Null Literal Node should be equal to self");
+            nullLiteral.Should().BeEqualTo(null, because: "Null Literal Node should be equal to a null");
+            nullLiteral.Should().BeEqualTo(null, because:"Null should be equal to a Null Literal Node");
+            someLiteral.Should().NotBeEqualTo(nullLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
+            nullLiteral.Should().NotBeEqualTo(someLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
 
-            nullBNode.Should().Be(nullBNode, because:"Null BNode Node should be equal to self");
-            nullBNode.Should().Be(null, because:"Null BNode Node should be equal to a null");
-            nullBNode.Should().Be(null, because:"Null should be equal to a Null BNode Node");
-            someBNode.Should().NotBe(nullBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
-            nullBNode.Should().NotBe(someBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
+            nullBNode.Should().BeEqualTo(nullBNode, because:"Null BNode Node should be equal to self");
+            nullBNode.Should().BeEqualTo(null, because:"Null BNode Node should be equal to a null");
+            nullBNode.Should().BeEqualTo(null, because:"Null should be equal to a Null BNode Node");
+            someBNode.Should().NotBeEqualTo(nullBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
+            nullBNode.Should().NotBeEqualTo(someBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
         }
     }
 }
