@@ -102,13 +102,7 @@ namespace VDS.RDF.Parsing.Events.RdfXml
         private XmlReaderSettings GetSettings()
         {
             XmlReaderSettings settings = new XmlReaderSettings();
-#if PORTABLE
             settings.DtdProcessing = DtdProcessing.Ignore;
-#elif SILVERLIGHT || NET40
-            settings.DtdProcessing = DtdProcessing.Parse;
-#else
-            settings.ProhibitDtd = false;
-#endif
             settings.ConformanceLevel = ConformanceLevel.Document;
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
@@ -194,7 +188,7 @@ namespace VDS.RDF.Parsing.Events.RdfXml
                                 if (this._rdfRootSeen) throw new RdfParseException("Unexpected nested rdf:RDF node encountered, this is not valid RDF/XML syntax");
                                 this._noRead = true;
                                 this._first = true;
-                                return new ClearQueueEvent();
+                                return new ClearXmlQueueEvent();
                             }
                             return this.GetElement();
                         }

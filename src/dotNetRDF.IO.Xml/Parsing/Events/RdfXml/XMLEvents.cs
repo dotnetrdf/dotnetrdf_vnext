@@ -910,5 +910,11 @@ namespace VDS.RDF.Parsing.Events.RdfXml
         }
     }
 
+    public class ClearXmlQueueEvent : ClearQueueEvent, IRdfXmlEvent
+    {
+        public ClearXmlQueueEvent() : base() { }
+
+        public string SourceXml => null;
+    }
     
 }
