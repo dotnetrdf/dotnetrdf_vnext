@@ -825,23 +825,23 @@ namespace VDS.RDF.Nodes
             INode someLiteral = g.CreateLiteralNode("A Literal");
             INode someBNode = g.CreateBlankNode();
 
-            nullUri.Should().BeEqualTo(nullUri, because:"Null URI Node should be equal to self");
-            nullUri.Should().BeEqualTo(null, because: "Null URI Node should be equal to a null");
-            nullUri.Should().BeEqualTo(null, because:"Null should be equal to a Null URI Node");
-            someUri.Should().NotBeEqualTo(nullUri, because:"Null URI Node should not be equal to an actual URI Node");
-            nullUri.Should().NotBeEqualTo(someUri, because:"Null URI Node should not be equal to an actual URI Node");
+            Assert.Equal(nullUri, nullUri);
+            Assert.Equal(nullUri, null);
+            Assert.Equal(null, nullUri);
+            Assert.NotEqual(nullUri, someUri);
+            Assert.NotEqual(someUri, nullUri);
 
-            nullLiteral.Should().BeEqualTo(nullLiteral, because:"Null Literal Node should be equal to self");
-            nullLiteral.Should().BeEqualTo(null, because: "Null Literal Node should be equal to a null");
-            nullLiteral.Should().BeEqualTo(null, because:"Null should be equal to a Null Literal Node");
-            someLiteral.Should().NotBeEqualTo(nullLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
-            nullLiteral.Should().NotBeEqualTo(someLiteral, because:"Null Literal Node should not be equal to an actual Literal Node");
+            Assert.Equal(nullLiteral, nullLiteral);
+            Assert.Equal(nullLiteral, null);
+            Assert.Equal(null, nullLiteral);
+            Assert.NotEqual(someLiteral, nullLiteral);
+            Assert.NotEqual(nullLiteral, someLiteral);
 
-            nullBNode.Should().BeEqualTo(nullBNode, because:"Null BNode Node should be equal to self");
-            nullBNode.Should().BeEqualTo(null, because:"Null BNode Node should be equal to a null");
-            nullBNode.Should().BeEqualTo(null, because:"Null should be equal to a Null BNode Node");
-            someBNode.Should().NotBeEqualTo(nullBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
-            nullBNode.Should().NotBeEqualTo(someBNode, because:"Null BNode Node should not be equal to an actual BNode Node");
+            Assert.Equal(nullBNode, nullBNode);
+            Assert.Equal(nullBNode, null);
+            Assert.Equal(null, nullBNode);
+            Assert.NotEqual(nullBNode, someBNode);
+            Assert.NotEqual(someBNode, nullBNode);
         }
     }
 }
