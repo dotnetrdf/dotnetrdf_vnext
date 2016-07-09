@@ -126,7 +126,7 @@ namespace VDS.RDF
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up the appropriate encoding
-            using (var stream = new FileStream(filename, FileMode.Open))
+            using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 parser.Load(new GraphHandler(g), new StreamReader(stream));
             }
@@ -136,7 +136,7 @@ namespace VDS.RDF
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up appropriate encoding
-            using (var stream = new FileStream(filename, FileMode.Open))
+            using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 parser.Load(new GraphStoreHandler(graphStore), new StreamReader(stream));
             }
@@ -479,7 +479,7 @@ namespace VDS.RDF
             // TODO Should create stream with appropriate encoding
             using (var stream = new FileStream(file, FileMode.Create))
             {
-                writer.Save(store, new StreamWriter(new FileStream(file, FileMode.Create)));
+                writer.Save(store, new StreamWriter(stream));
                 stream.Flush();
             }
         }

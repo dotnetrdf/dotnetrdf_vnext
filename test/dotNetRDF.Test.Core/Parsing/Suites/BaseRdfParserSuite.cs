@@ -44,7 +44,7 @@ namespace VDS.RDF.Parsing.Suites
         protected override IGraph TryParseTestInput(string file)
         {
             IGraph actual = new Graph();
-            using (var stream = new FileStream(file, FileMode.Open))
+            using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 this.Parser.Load(new GraphHandler(actual), new StreamReader(stream), new ParserProfile(BaseUri));
             }
