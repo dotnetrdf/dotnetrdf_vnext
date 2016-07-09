@@ -154,7 +154,16 @@ namespace VDS.RDF.Parsing
                 {
                     //Load XML from Stream
                     XmlDocument doc = new XmlDocument();
-                    doc.Load(input);
+                    XmlReaderSettings settings = new XmlReaderSettings();
+                    settings.DtdProcessing = DtdProcessing.Ignore;
+                    settings.ConformanceLevel = ConformanceLevel.Document;
+                    settings.IgnoreComments = true;
+                    settings.IgnoreProcessingInstructions = true;
+                    settings.IgnoreWhitespace = true;
+                    settings.MaxCharactersFromEntities = long.MaxValue;
+                    var xmlReader = XmlReader.Create(input, settings);
+
+                    doc.Load(xmlReader);
 
                     //Create a new Parser Context and Parse
                     RdfXmlParserContext context = new RdfXmlParserContext(handler, doc, this._traceparsing, profile);
