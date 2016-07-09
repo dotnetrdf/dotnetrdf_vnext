@@ -383,10 +383,14 @@ namespace VDS.RDF
                 var deps = DependencyContext.Default;
                 foreach(var lib in deps.RuntimeLibraries)
                 {
-                    foreach(var runtimeAssembly in lib.Assemblies)
+                    try
                     {
-                        var assembly = Assembly.Load(runtimeAssembly.Name);
+                        var assembly = Assembly.Load(new AssemblyName(lib.Name));
                         ScanDefinitions(assembly);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Ignore
                     }
                 }
             }
@@ -394,7 +398,7 @@ namespace VDS.RDF
 
         public static void ScanDefinitions(Assembly assembly)
         {
-            foreach (RdfIOAttribute attribute in assembly.CustomAttributes.OfType<RdfIOAttribute>())
+            foreach (var attribute in assembly.GetCustomAttributes<RdfIOAttribute>())
             {
                 _mimeTypes.Add(attribute.GetDefinition());
             }
