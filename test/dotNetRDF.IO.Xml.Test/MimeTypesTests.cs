@@ -13,7 +13,6 @@ namespace VDS.RDF
         public MimeTypesTests()
         {
             IOManager.ResetDefinitions();
-            IOManager.ScanDefinitions();
         }
 
         public void Dispose()
