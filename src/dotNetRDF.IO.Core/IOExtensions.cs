@@ -126,14 +126,14 @@ namespace VDS.RDF
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up the appropriate encoding
-            parser.Load(new GraphHandler(g), new StreamReader(new FileStream(filename, FileMode.Create)));
+            parser.Load(new GraphHandler(g), new StreamReader(new FileStream(filename, FileMode.Open)));
         }
 
         public static void Load(this IRdfReader parser, IGraphStore graphStore, String filename)
         {
             if (ReferenceEquals(parser, null)) throw new ArgumentNullException("parser");
             // TODO This should look up appropriate encoding
-            parser.Load(new GraphStoreHandler(graphStore), new StreamReader(new FileStream(filename, FileMode.Create)));
+            parser.Load(new GraphStoreHandler(graphStore), new StreamReader(new FileStream(filename, FileMode.Open)));
         }
 
         /// <summary>
