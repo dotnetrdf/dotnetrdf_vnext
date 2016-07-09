@@ -100,7 +100,7 @@ namespace VDS.RDF.Parsing.Suites
                         Assert.True(false, this.Failed + " Test failed, " + this.Indeterminate + " Tests are indeterminate and " + this.Passed + " Tests Passed");
                     }
                 }
-                this.Indeterminate.Should().NotBe(0, this.Indeterminate + " Tests are indeterminate and " + this.Passed + " Tests Passed");
+                this.Indeterminate.Should().Be(0, this.Indeterminate + " Tests are indeterminate and " + this.Passed + " Tests Passed");
             }
             finally
             {
