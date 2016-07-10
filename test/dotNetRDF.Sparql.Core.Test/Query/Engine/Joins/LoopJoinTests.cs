@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Query.Engine.Joins.Strategies;
 
 namespace VDS.RDF.Query.Engine.Joins
 {
-    [TestFixture]
     public class LoopJoinTests
         : AbstractJoinTests
     {
@@ -29,7 +28,6 @@ namespace VDS.RDF.Query.Engine.Joins
         }
     }
 
-    [TestFixture]
     public class MinusLoopJoinTests
         : AbstractJoinTests
     {

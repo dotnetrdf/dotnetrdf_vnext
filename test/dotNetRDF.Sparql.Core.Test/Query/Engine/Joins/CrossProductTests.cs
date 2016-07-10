@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Query.Engine.Joins.Strategies;
 
 namespace VDS.RDF.Query.Engine.Joins
 {
-    [TestFixture]
     public class CrossProductTests 
         : AbstractJoinTests
     {

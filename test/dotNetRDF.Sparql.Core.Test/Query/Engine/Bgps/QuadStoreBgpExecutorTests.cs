@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Graphs;
 using VDS.RDF.Nodes;
 
 namespace VDS.RDF.Query.Engine.Bgps
 {
-    [TestFixture]
     public abstract class AbstractBgpExecutorTests
     {
         private static IGraph CreateGraph()
@@ -32,7 +31,7 @@ namespace VDS.RDF.Query.Engine.Bgps
 
         protected abstract IBgpExecutor CreateExecutor(IGraph g);
 
-        [Test]
+        [Fact]
         public void BgpExecutorGround1()
         {
             IGraph g = CreateGraph();
@@ -42,11 +41,11 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(0, results.First().Variables.Count());
+            Assert.Equal(1, results.Count);
+            Assert.Equal(0, results.First().Variables.Count());
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorGround2()
         {
             IGraph g = CreateGraph();
@@ -56,10 +55,10 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(0, results.Count);
+            Assert.Equal(0, results.Count);
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorMatch1()
         {
             IGraph g = CreateGraph();
@@ -69,12 +68,12 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(3, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 1));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o")));
+            Assert.Equal(3, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 1));
+            Assert.True(results.All(s => s.ContainsVariable("o")));
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorMatch2()
         {
             IGraph g = CreateGraph();
@@ -84,12 +83,12 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 2));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 2));
+            Assert.True(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorMatch3()
         {
             IGraph g = CreateGraph();
@@ -99,12 +98,12 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 2));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("s")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 2));
+            Assert.True(results.All(s => s.ContainsVariable("s")));
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorChainedMatch1()
         {
             IGraph g = CreateGraph();
@@ -115,17 +114,17 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 2));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 2));
+            Assert.True(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
 
             results = results.SelectMany(s => executor.Match(search2, s, context)).ToList();
-            Assert.AreEqual(2, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 3));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o2")));
+            Assert.Equal(2, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 3));
+            Assert.True(results.All(s => s.ContainsVariable("o2")));
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorChainedMatch2()
         {
             IGraph g = CreateGraph();
@@ -137,17 +136,17 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 2));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("s")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 2));
+            Assert.True(results.All(s => s.ContainsVariable("s")));
 
             results = results.SelectMany(s => executor.Match(search2, s, context)).ToList();
-            Assert.AreEqual(2, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 3));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o")));
+            Assert.Equal(2, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 3));
+            Assert.True(results.All(s => s.ContainsVariable("o")));
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorChainedMatch3()
         {
             IGraph g = CreateGraph();
@@ -158,15 +157,15 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 2));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 2));
+            Assert.True(results.All(s => s.ContainsVariable("o") && s.ContainsVariable("s")));
 
             results = results.SelectMany(s => executor.Match(search2, s, context)).ToList();
-            Assert.AreEqual(0, results.Count);
+            Assert.Equal(0, results.Count);
         }
 
-        [Test]
+        [Fact]
         public void BgpExecutorDistinctMatch1()
         {
             IGraph g = CreateGraph();
@@ -177,18 +176,17 @@ namespace VDS.RDF.Query.Engine.Bgps
 
             QueryExecutionContext context = new QueryExecutionContext(Quad.DefaultGraphNode, Quad.DefaultGraphNode.AsEnumerable(), null);
             List<ISolution> results = executor.Match(search, context).ToList();
-            Assert.AreEqual(5, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 3));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("a") && s.ContainsVariable("b") && s.ContainsVariable("c")));
+            Assert.Equal(5, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 3));
+            Assert.True(results.All(s => s.ContainsVariable("a") && s.ContainsVariable("b") && s.ContainsVariable("c")));
 
             results = results.SelectMany(s => executor.Match(search2, s, context)).ToList();
-            Assert.AreEqual(25, results.Count);
-            Assert.IsTrue(results.All(s => s.Variables.Count() == 6));
-            Assert.IsTrue(results.All(s => s.ContainsVariable("a") && s.ContainsVariable("b") && s.ContainsVariable("c") && s.ContainsVariable("d") && s.ContainsVariable("e") && s.ContainsVariable("f")));
+            Assert.Equal(25, results.Count);
+            Assert.True(results.All(s => s.Variables.Count() == 6));
+            Assert.True(results.All(s => s.ContainsVariable("a") && s.ContainsVariable("b") && s.ContainsVariable("c") && s.ContainsVariable("d") && s.ContainsVariable("e") && s.ContainsVariable("f")));
         }
     }
 
-    [TestFixture]
     public class QuadStoreBgpExecutorTests 
         : AbstractBgpExecutorTests
     {
@@ -205,7 +203,6 @@ namespace VDS.RDF.Query.Engine.Bgps
         }
     }
 
-    [TestFixture]
     public class GraphBgpExecutorTests
         : AbstractBgpExecutorTests
     {

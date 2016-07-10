@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Collections;
 using VDS.RDF.Nodes;
 
@@ -31,7 +31,7 @@ namespace VDS.RDF.Query.Engine.Joins
 
         public static IEnumerable<String> NoVariables { get { return Enumerable.Empty<String>(); }}
         
-        [Test]
+        [Fact]
         public void EmptyLhs()
         {
             IEnumerable<ISolution> lhs = Enumerable.Empty<ISolution>();
@@ -40,7 +40,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, NoVariables, rhs, NoVariables), MakeJoinEnumerable(lhs, NoVariables, rhs, NoVariables));
         }
 
-        [Test]
+        [Fact]
         public void EmptyRhs()
         {
             IEnumerable<ISolution> lhs = new Solution().AsEnumerable();
@@ -49,7 +49,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, NoVariables, rhs, NoVariables), MakeJoinEnumerable(lhs, NoVariables, rhs, NoVariables));
         }
 
-        [Test]
+        [Fact]
         public void NoVariables1()
         {
             IEnumerable<ISolution> lhs = new Solution().AsEnumerable();
@@ -58,7 +58,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, NoVariables, rhs, NoVariables), MakeJoinEnumerable(lhs, NoVariables, rhs, NoVariables));
         }
 
-        [Test]
+        [Fact]
         public void SingleVariableNoCommon()
         {
             Solution x = new Solution();
@@ -74,7 +74,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, lhsVars, rhs, rhsVars), MakeJoinEnumerable(lhs, lhsVars, rhs, rhsVars));
         }
 
-        [Test]
+        [Fact]
         public void SingleVariableCommon1()
         {
             Solution x = new Solution();
@@ -89,7 +89,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, vars, rhs, vars), MakeJoinEnumerable(lhs, vars, rhs, vars));
         }
 
-        [Test]
+        [Fact]
         public void SingleVariableCommon2()
         {
             Solution x = new Solution();
@@ -104,7 +104,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, vars, rhs, vars), MakeJoinEnumerable(lhs, vars, rhs, vars));
         }
 
-        [Test]
+        [Fact]
         public void MultiVariableCommon1()
         {
             Solution x = new Solution();
@@ -121,7 +121,7 @@ namespace VDS.RDF.Query.Engine.Joins
             EnumerableTests.Check(MakeExpectedResults(lhs, vars, rhs, vars), MakeJoinEnumerable(lhs, vars, rhs, vars));
         }
 
-        [Test]
+        [Fact]
         public void MultiVariableCommon2()
         {
             Solution x = new Solution();

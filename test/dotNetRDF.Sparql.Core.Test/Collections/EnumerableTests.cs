@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace VDS.RDF.Collections
 {
-    [TestFixture]
     public class EnumerableTests
     {
         public static void Check<T>(IEnumerable<T> expected, IEnumerable<T> actual) 
@@ -19,7 +18,7 @@ namespace VDS.RDF.Collections
             TestTools.PrintEnumerable(actual, ",");
             Console.WriteLine();
 
-            Assert.AreEqual(expected.Count(), actual.Count());
+            Assert.Equal(expected.Count(), actual.Count());
 
             IEnumerator<T> expectedEnumerator = expected.GetEnumerator();
             IEnumerator<T> actualEnumerator = actual.GetEnumerator();
@@ -32,7 +31,7 @@ namespace VDS.RDF.Collections
                 if (!actualEnumerator.MoveNext()) Assert.Fail(String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
                 T actualItem = actualEnumerator.Current;
 
-                Assert.AreEqual(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
+                Assert.Equal(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
             }
             if (actualEnumerator.MoveNext()) Assert.Fail("Actual enumerator has additional unexpected items");
         }
@@ -46,7 +45,7 @@ namespace VDS.RDF.Collections
             TestTools.PrintEnumerableStruct(actual, ",");
             Console.WriteLine();
 
-            Assert.AreEqual(expected.Count(), actual.Count());
+            Assert.Equal(expected.Count(), actual.Count());
 
             IEnumerator<T> expectedEnumerator = expected.GetEnumerator();
             IEnumerator<T> actualEnumerator = actual.GetEnumerator();
@@ -59,7 +58,7 @@ namespace VDS.RDF.Collections
                 if (!actualEnumerator.MoveNext()) Assert.Fail(String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
                 T actualItem = actualEnumerator.Current;
 
-                Assert.AreEqual(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
+                Assert.Equal(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
             }
             if (actualEnumerator.MoveNext()) Assert.Fail("Actual enumerator has additional unexpected items");
         }
@@ -103,7 +102,7 @@ namespace VDS.RDF.Collections
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongTakeEnumerator<String>(data.GetEnumerator(), 1);
             String i = enumerator.Current;
-            Assert.AreEqual(default(String), i);
+            Assert.Equal(default(String), i);
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]
@@ -120,7 +119,7 @@ namespace VDS.RDF.Collections
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongSkipEnumerator<String>(data.GetEnumerator(), 1);
             String i = enumerator.Current;
-            Assert.AreEqual(default(String), i);
+            Assert.Equal(default(String), i);
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]
@@ -139,7 +138,7 @@ namespace VDS.RDF.Collections
             IEnumerator<String> enumerator = new LongTakeEnumerator<String>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
             String i = enumerator.Current;
-            Assert.AreEqual(default(String), i);
+            Assert.Equal(default(String), i);
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]
@@ -158,10 +157,10 @@ namespace VDS.RDF.Collections
             IEnumerator<String> enumerator = new LongSkipEnumerator<String>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
             String i = enumerator.Current;
-            Assert.AreEqual(default(String), i);
+            Assert.Equal(default(String), i);
         }
             
-        [TestCaseSource("SkipAndTakeData")]
+        [Theory, MemberData("SkipAndTakeData")]
         public void LongSkipEnumerable(int start, int count, int skip)
         {
             IEnumerable<int> data = Enumerable.Range(start, count);
@@ -170,14 +169,14 @@ namespace VDS.RDF.Collections
 
             if (skip > count)
             {
-                Assert.IsFalse(expected.Any());
-                Assert.IsFalse(actual.Any());
+                Assert.False(expected.Any());
+                Assert.False(actual.Any());
             }
             
             CheckStruct(expected, actual);
         }
 
-        [TestCaseSource("SkipAndTakeData")]
+        [Theory, MemberData("SkipAndTakeData")]
         public void LongTakeEnumerable(int start, int count, int take)
         {
             IEnumerable<int> data = Enumerable.Range(start, count);
@@ -187,7 +186,7 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [TestCaseSource("AddOmitData")]
+        [Theory, MemberData("AddOmitData")]
         public void AddDistinctEnumerable(int start, int count, int item)
         {
             IEnumerable<int> data = Enumerable.Range(start, count);
@@ -197,7 +196,7 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [TestCaseSource("AddOmitData")]
+        [Theory, MemberData("AddOmitData")]
         public void OmitAllEnumerable(int start, int count, int item)
         {
             IEnumerable<int> data = Enumerable.Range(start, count);
@@ -207,18 +206,18 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [Test]
+        [Fact]
         public void AddIfEmptyEnumerable()
         {
             IEnumerable<int> data = Enumerable.Empty<int>();
             IEnumerable<int> actual = data.AddIfEmpty(1);
 
-            Assert.IsFalse(data.Any());            
-            Assert.IsTrue(actual.Any());
-            Assert.AreEqual(1, actual.First());
+            Assert.False(data.Any());            
+            Assert.True(actual.Any());
+            Assert.Equal(1, actual.First());
         }
 
-        [Test]
+        [Fact]
         public void TopNEnumerable1()
         {
             IEnumerable<int> data = new int[] {1, 7, 9, 3, 5};
@@ -230,7 +229,7 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [Test]
+        [Fact]
         public void TopNEnumerable2()
         {
             IEnumerable<int> data = new int[] { 1, 7, 9, 3, 5 };
@@ -242,7 +241,7 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [Test]
+        [Fact]
         public void TopNEnumerable3()
         {
             IEnumerable<int> data = new int[] { 1, 7, 9, 3, 5 };
@@ -253,7 +252,7 @@ namespace VDS.RDF.Collections
             CheckStruct(expected, actual);
         }
 
-        [Test]
+        [Fact]
         public void TopNEnumerable4()
         {
             IEnumerable<String> data = new String[] { "a", "z", "m", "q", "c", "f" };

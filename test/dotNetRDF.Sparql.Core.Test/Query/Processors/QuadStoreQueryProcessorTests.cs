@@ -1,9 +1,8 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using VDS.RDF.Graphs;
 
 namespace VDS.RDF.Query.Processors
 {
-    [TestFixture]
     public class QuadStoreQueryProcessorTests
         : AbstractQueryProcessorTests
     {

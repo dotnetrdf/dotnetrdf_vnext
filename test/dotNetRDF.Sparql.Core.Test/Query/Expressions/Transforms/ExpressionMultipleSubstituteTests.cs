@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Nodes;
 using VDS.RDF.Query.Expressions.Aggregates.Sparql;
 using VDS.RDF.Query.Expressions.Comparison;
@@ -10,7 +10,6 @@ using VDS.RDF.Query.Expressions.Primary;
 
 namespace VDS.RDF.Query.Expressions.Transforms
 {
-    [TestFixture]
     public class ExpressionMultipleSubstituteTests
         : AbstractExpressionTransformTests
     {
@@ -21,13 +20,12 @@ namespace VDS.RDF.Query.Expressions.Transforms
             return new ExprTransformMultipleSubstitute(this.Substitutions);
         }
 
-        [SetUp]
-        public void Setup()
+        public ExpressionMultipleSubstituteTests()
         {
             this.Substitutions = new Dictionary<IExpression, IExpression>();
         }
         
-        [Test]
+        [Fact]
         public void ExpressionMultipleSubstitute1()
         {
             IExpression x = new VariableTerm("x");
@@ -38,7 +36,7 @@ namespace VDS.RDF.Query.Expressions.Transforms
             this.CheckTransform(x, y);
         }
 
-        [Test]
+        [Fact]
         public void ExpressionMultipleSubstitute2()
         {
             IExpression agg = new CountAllAggregate();

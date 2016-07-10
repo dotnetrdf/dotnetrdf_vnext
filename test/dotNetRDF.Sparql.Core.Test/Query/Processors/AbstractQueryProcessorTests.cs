@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Graphs;
 using VDS.RDF.Nodes;
 using VDS.RDF.Query.Elements;
@@ -16,7 +16,6 @@ using VDS.RDF.Query.Sorting;
 
 namespace VDS.RDF.Query.Processors
 {
-    [TestFixture]
     public abstract class AbstractQueryProcessorTests
     {
         private static IGraph CreateGraph()
@@ -49,7 +48,7 @@ namespace VDS.RDF.Query.Processors
         /// <returns></returns>
         protected abstract IQueryProcessor CreateProcessor(IGraph g);
 
-        [Test]
+        [Fact]
         public void QueryProcessorAskEmptyWhere()
         {
             IQuery query = new Query();
@@ -58,12 +57,12 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(CreateGraph());
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsBoolean);
-            Assert.IsTrue(result.Boolean.HasValue);
-            Assert.IsTrue(result.Boolean.Value);
+            Assert.True(result.IsBoolean);
+            Assert.True(result.Boolean.HasValue);
+            Assert.True(result.Boolean.Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorAskWhereNoMatches()
         {
             IGraph g = CreateGraph();
@@ -77,12 +76,12 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsBoolean);
-            Assert.IsTrue(result.Boolean.HasValue);
-            Assert.IsFalse(result.Boolean.Value);
+            Assert.True(result.IsBoolean);
+            Assert.True(result.Boolean.HasValue);
+            Assert.False(result.Boolean.Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorAskWhereAnyMatches()
         {
             IGraph g = CreateGraph();
@@ -95,12 +94,12 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsBoolean);
-            Assert.IsTrue(result.Boolean.HasValue);
-            Assert.IsTrue(result.Boolean.Value);
+            Assert.True(result.IsBoolean);
+            Assert.True(result.Boolean.HasValue);
+            Assert.True(result.Boolean.Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorAskWhereConcreteMatch()
         {
             IGraph g = CreateGraph();
@@ -108,18 +107,18 @@ namespace VDS.RDF.Query.Processors
             IQuery query = new Query();
             query.QueryType = QueryType.Ask;
             Triple t = g.Triples.FirstOrDefault(x => x.IsGround);
-            Assert.IsNotNull(t);
+            Assert.NotNull(t);
             query.WhereClause = new TripleBlockElement(t.AsEnumerable());
 
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsBoolean);
-            Assert.IsTrue(result.Boolean.HasValue);
-            Assert.IsTrue(result.Boolean.Value);
+            Assert.True(result.IsBoolean);
+            Assert.True(result.Boolean.HasValue);
+            Assert.True(result.Boolean.Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorSelectEmptyWhere()
         {
             IQuery query = new Query();
@@ -128,15 +127,15 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(CreateGraph());
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(1, results.Count);
+            Assert.Equal(1, results.Count);
 
             IResultRow row = results[0];
-            Assert.IsTrue(row.IsEmpty);
+            Assert.True(row.IsEmpty);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorSelectWhereNoMatches()
         {
             IGraph g = CreateGraph();
@@ -150,12 +149,12 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(0, results.Count);
+            Assert.Equal(0, results.Count);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorSelectWhereAnyMatches()
         {
             IGraph g = CreateGraph();
@@ -168,14 +167,14 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(g.Count, results.Count);
+            Assert.Equal(g.Count, results.Count);
 
-            Assert.IsTrue(results.All(r => r.HasBoundValue("s") && r.HasBoundValue("p") && r.HasBoundValue("o")));
+            Assert.True(results.All(r => r.HasBoundValue("s") && r.HasBoundValue("p") && r.HasBoundValue("o")));
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorSelectWhereConcreteMatch()
         {
             IGraph g = CreateGraph();
@@ -183,21 +182,21 @@ namespace VDS.RDF.Query.Processors
             IQuery query = new Query();
             query.QueryType = QueryType.SelectAll;
             Triple t = g.Triples.FirstOrDefault(x => x.IsGround);
-            Assert.IsNotNull(t);
+            Assert.NotNull(t);
             query.WhereClause = new TripleBlockElement(t.AsEnumerable());
 
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(1, results.Count);
+            Assert.Equal(1, results.Count);
 
             IResultRow row = results[0];
-            Assert.IsTrue(row.IsEmpty);
+            Assert.True(row.IsEmpty);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorProject1()
         {
             IGraph g = new Graph();
@@ -218,16 +217,16 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(1, results.Count);
+            Assert.Equal(1, results.Count);
 
             IResultRow row = results[0];
-            Assert.IsTrue(row.HasBoundValue("x"));
-            Assert.AreEqual(ten, row["x"]);
+            Assert.True(row.HasBoundValue("x"));
+            Assert.Equal(ten, row["x"]);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorProject2()
         {
             IGraph g = new Graph();
@@ -253,25 +252,25 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(data.Count, results.Count);
+            Assert.Equal(data.Count, results.Count);
 
             foreach (IResultRow row in results)
             {
-                Assert.IsTrue(row.HasValue("x"));
+                Assert.True(row.HasValue("x"));
                 if (row.HasBoundValue("x"))
                 {
-                    Assert.AreEqual(ten, row["x"]);
+                    Assert.Equal(ten, row["x"]);
                 }
                 else
                 {
-                    Assert.IsFalse(row.HasBoundValue("x"));
+                    Assert.False(row.HasBoundValue("x"));
                 }
             }
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorOrderBy1()
         {
             IGraph g = new Graph();
@@ -293,19 +292,19 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(data.Count, results.Count);
+            Assert.Equal(data.Count, results.Count);
 
             IResultRow first = results[0];
             IResultRow second = results[1];
-            Assert.IsTrue(first.HasBoundValue("x"));
-            Assert.IsTrue(second.HasBoundValue("x"));
-            Assert.AreEqual(ten, first["x"]);
-            Assert.AreEqual(hundred, second["x"]);
+            Assert.True(first.HasBoundValue("x"));
+            Assert.True(second.HasBoundValue("x"));
+            Assert.Equal(ten, first["x"]);
+            Assert.Equal(hundred, second["x"]);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorOrderBy2()
         {
             IGraph g = new Graph();
@@ -327,19 +326,19 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
-            Assert.AreEqual(data.Count, results.Count);
+            Assert.Equal(data.Count, results.Count);
 
             IResultRow first = results[0];
             IResultRow second = results[1];
-            Assert.IsTrue(first.HasBoundValue("x"));
-            Assert.IsTrue(second.HasBoundValue("x"));
-            Assert.AreEqual(hundred, first["x"]);
-            Assert.AreEqual(ten, second["x"]);
+            Assert.True(first.HasBoundValue("x"));
+            Assert.True(second.HasBoundValue("x"));
+            Assert.Equal(hundred, first["x"]);
+            Assert.Equal(ten, second["x"]);
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorGroupBy1()
         {
             IGraph g = new Graph();
@@ -367,25 +366,25 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
             QueryTestTools.ShowResults(results);
-            Assert.AreEqual(2, results.Count);
+            Assert.Equal(2, results.Count);
 
             foreach (IResultRow row in results)
             {
-                Assert.AreEqual(2, row.Variables.Count());
-                Assert.IsTrue(row.HasValue("x"));
+                Assert.Equal(2, row.Variables.Count());
+                Assert.True(row.HasValue("x"));
                 if (row.HasBoundValue("x"))
                 {
-                    Assert.AreEqual(ten, row["x"]);
+                    Assert.Equal(ten, row["x"]);
                 }
-                Assert.IsTrue(row.HasBoundValue("count"));
-                Assert.AreEqual(new LongNode(2), row["count"]);
+                Assert.True(row.HasBoundValue("count"));
+                Assert.Equal(new LongNode(2), row["count"]);
             }
         }
 
-        [Test]
+        [Fact]
         public void QueryProcessorGroupBy2()
         {
             IGraph g = new Graph();
@@ -413,23 +412,23 @@ namespace VDS.RDF.Query.Processors
             IQueryProcessor processor = CreateProcessor(g);
             IQueryResult result = processor.Execute(query);
 
-            Assert.IsTrue(result.IsTabular);
+            Assert.True(result.IsTabular);
             IRandomAccessTabularResults results = new RandomAccessTabularResults(result.Table);
             QueryTestTools.ShowResults(results);
-            Assert.AreEqual(2, results.Count);
+            Assert.Equal(2, results.Count);
 
             foreach (IResultRow row in results)
             {
-                Assert.AreEqual(2, row.Variables.Count());
-                Assert.IsTrue(row.HasValue("x"));
+                Assert.Equal(2, row.Variables.Count());
+                Assert.True(row.HasValue("x"));
                 if (row.HasBoundValue("x"))
                 {
-                    Assert.AreEqual(ten, row["x"]);
+                    Assert.Equal(ten, row["x"]);
                 }
-                Assert.IsTrue(row.HasValue("sample"));
+                Assert.True(row.HasValue("sample"));
                 if (row.HasBoundValue("sample"))
                 {
-                    Assert.AreEqual(hundred, row["sample"]);
+                    Assert.Equal(hundred, row["sample"]);
                 }
             }
         }

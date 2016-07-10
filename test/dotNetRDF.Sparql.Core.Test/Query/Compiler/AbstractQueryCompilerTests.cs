@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Graphs;
 using VDS.RDF.Nodes;
 using VDS.RDF.Query.Algebra;
@@ -18,13 +17,11 @@ using VDS.RDF.Query.Results;
 
 namespace VDS.RDF.Query.Compiler
 {
-    [TestFixture]
     public abstract class AbstractQueryCompilerTests
     {
         protected INodeFactory NodeFactory { get; set; }
 
-        [SetUp]
-        public void Setup()
+        public AbstractQueryCompilerTests()
         {
             if (this.NodeFactory == null) this.NodeFactory = new NodeFactory();
         }
@@ -35,7 +32,7 @@ namespace VDS.RDF.Query.Compiler
         /// <returns></returns>
         protected abstract IQueryCompiler CreateInstance();
 
-        [Test]
+        [Fact]
         public void QueryCompilerEmptyWhere()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -44,13 +41,13 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsTrue(table.IsUnit);
+            Assert.True(table.IsUnit);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerEmptyBgp()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -60,13 +57,13 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsTrue(table.IsUnit);
+            Assert.True(table.IsUnit);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerBgp()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -77,14 +74,14 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Bgp), algebra);
+            Assert.IsType(typeof (Bgp), algebra);
 
             Bgp bgp = (Bgp) algebra;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerEmptyPathBlock()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -94,13 +91,13 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(Table), algebra);
+            Assert.IsType(typeof(Table), algebra);
 
             Table table = (Table)algebra;
-            Assert.IsTrue(table.IsUnit);
+            Assert.True(table.IsUnit);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerPathBlock1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -111,14 +108,14 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(Bgp), algebra);
+            Assert.IsType(typeof(Bgp), algebra);
 
             Bgp bgp = (Bgp)algebra;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerPathBlock2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -129,21 +126,21 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(PropertyPath), algebra);
+            Assert.IsType(typeof(PropertyPath), algebra);
 
             PropertyPath pp = (PropertyPath) algebra;
-            Assert.IsTrue(pp.TriplePath.IsPath);
-            Assert.IsInstanceOf(typeof(InversePath), pp.TriplePath.Path);
-            Assert.AreEqual(t.Subject, pp.TriplePath.Subject);
-            Assert.AreEqual(t.Object, pp.TriplePath.Object);
+            Assert.True(pp.TriplePath.IsPath);
+            Assert.IsType(typeof(InversePath), pp.TriplePath.Path);
+            Assert.Equal(t.Subject, pp.TriplePath.Subject);
+            Assert.Equal(t.Object, pp.TriplePath.Object);
 
-            Assert.IsInstanceOf(typeof(Bgp), pp.InnerAlgebra);
+            Assert.IsType(typeof(Bgp), pp.InnerAlgebra);
             Bgp bgp = (Bgp)pp.InnerAlgebra;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerPathBlock3()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -156,27 +153,27 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(PropertyPath), algebra);
+            Assert.IsType(typeof(PropertyPath), algebra);
 
             PropertyPath pp = (PropertyPath)algebra;
-            Assert.IsTrue(pp.TriplePath.IsPath);
-            Assert.IsInstanceOf(typeof(SequencePath), pp.TriplePath.Path);
-            Assert.AreEqual(t.Subject, pp.TriplePath.Subject);
-            Assert.AreEqual(t.Object, pp.TriplePath.Object);
+            Assert.True(pp.TriplePath.IsPath);
+            Assert.IsType(typeof(SequencePath), pp.TriplePath.Path);
+            Assert.Equal(t.Subject, pp.TriplePath.Subject);
+            Assert.Equal(t.Object, pp.TriplePath.Object);
 
-            Assert.IsInstanceOf(typeof(PropertyPath), pp.InnerAlgebra);
+            Assert.IsType(typeof(PropertyPath), pp.InnerAlgebra);
             pp = (PropertyPath) pp.InnerAlgebra;
-            Assert.IsInstanceOf(typeof(InversePath), pp.TriplePath.Path);
-            Assert.AreEqual(t.Subject, pp.TriplePath.Subject);
-            Assert.AreEqual(t.Object, pp.TriplePath.Object);
+            Assert.IsType(typeof(InversePath), pp.TriplePath.Path);
+            Assert.Equal(t.Subject, pp.TriplePath.Subject);
+            Assert.Equal(t.Object, pp.TriplePath.Object);
 
-            Assert.IsInstanceOf(typeof(Bgp), pp.InnerAlgebra);
+            Assert.IsType(typeof(Bgp), pp.InnerAlgebra);
             Bgp bgp = (Bgp)pp.InnerAlgebra;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerUnion1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -190,14 +187,14 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Union), algebra);
+            Assert.IsType(typeof (Union), algebra);
 
             Union u = (Union) algebra;
-            Assert.IsInstanceOf(typeof (Bgp), u.Lhs);
-            Assert.IsInstanceOf(typeof (Bgp), u.Rhs);
+            Assert.IsType(typeof (Bgp), u.Lhs);
+            Assert.IsType(typeof (Bgp), u.Rhs);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerUnion2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -216,29 +213,29 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Union), algebra);
+            Assert.IsType(typeof (Union), algebra);
 
             Union u = (Union) algebra;
-            Assert.IsInstanceOf(typeof (Bgp), u.Lhs);
+            Assert.IsType(typeof (Bgp), u.Lhs);
 
             Bgp bgp = (Bgp) u.Lhs;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t1));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t1));
 
-            Assert.IsInstanceOf(typeof (Union), u.Rhs);
+            Assert.IsType(typeof (Union), u.Rhs);
             u = (Union) u.Rhs;
-            Assert.IsInstanceOf(typeof (Bgp), u.Lhs);
+            Assert.IsType(typeof (Bgp), u.Lhs);
 
             bgp = (Bgp) u.Lhs;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t2));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t2));
 
             bgp = (Bgp) u.Rhs;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t3));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t3));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerInlineEmptyValues()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -249,13 +246,13 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsTrue(table.IsEmpty);
+            Assert.True(table.IsEmpty);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerInlineValues1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -267,17 +264,17 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(1, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x")));
+            Assert.Equal(1, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerInlineValues2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -291,19 +288,19 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(3, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x") || s.ContainsVariable("y")));
-            Assert.IsFalse(table.Data.All(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
-            Assert.IsTrue(table.Data.Any(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
+            Assert.Equal(3, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x") || s.ContainsVariable("y")));
+            Assert.False(table.Data.All(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
+            Assert.True(table.Data.Any(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerValues1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -315,17 +312,17 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(1, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x")));
+            Assert.Equal(1, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerValues2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -339,19 +336,19 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(3, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x") || s.ContainsVariable("y")));
-            Assert.IsFalse(table.Data.All(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
-            Assert.IsTrue(table.Data.Any(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
+            Assert.Equal(3, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x") || s.ContainsVariable("y")));
+            Assert.False(table.Data.All(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
+            Assert.True(table.Data.Any(s => s.ContainsVariable("x") && s.ContainsVariable("y")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerEmptyValues()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -362,87 +359,88 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Table), algebra);
+            Assert.IsType(typeof (Table), algebra);
 
             Table table = (Table) algebra;
-            Assert.IsTrue(table.IsEmpty);
+            Assert.True(table.IsEmpty);
         }
 
-        [TestCase(0),
-         TestCase(100),
-         TestCase(Int64.MaxValue),
-         TestCase(-1),
-         TestCase(Int64.MinValue)]
+        [Theory]
+        [InlineData(0),
+         InlineData(100),
+         InlineData(Int64.MaxValue),
+         InlineData(-1),
+         InlineData(Int64.MinValue)]
         public void QueryCompilerLimit(long limit)
         {
             IQueryCompiler compiler = this.CreateInstance();
 
             IQuery query = new Query();
             query.Limit = limit;
-            Assert.IsTrue(limit >= 0L ? query.HasLimit : !query.HasLimit);
+            Assert.True(limit >= 0L ? query.HasLimit : !query.HasLimit);
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
             if (limit >= 0L)
             {
-                Assert.IsInstanceOf(typeof (Slice), algebra);
+                Assert.IsType(typeof (Slice), algebra);
 
                 Slice slice = (Slice) algebra;
-                Assert.AreEqual(limit, slice.Limit);
-                Assert.AreEqual(0L, slice.Offset);
+                Assert.Equal(limit, slice.Limit);
+                Assert.Equal(0L, slice.Offset);
             }
             else
             {
-                Assert.IsInstanceOf(typeof (Table), algebra);
+                Assert.IsType(typeof (Table), algebra);
 
                 Table table = (Table) algebra;
-                Assert.IsTrue(table.IsUnit);
+                Assert.True(table.IsUnit);
             }
         }
 
-        [TestCase(0),
-         TestCase(100),
-         TestCase(Int64.MaxValue),
-         TestCase(-1),
-         TestCase(Int64.MinValue)]
+        [Theory, InlineData(0),
+         InlineData(100),
+         InlineData(Int64.MaxValue),
+         InlineData(-1),
+         InlineData(Int64.MinValue)]
         public void QueryCompilerOffset(long offset)
         {
             IQueryCompiler compiler = this.CreateInstance();
 
             IQuery query = new Query();
             query.Offset = offset;
-            Assert.IsTrue(offset > 0L ? query.HasOffset : !query.HasOffset);
+            Assert.True(offset > 0L ? query.HasOffset : !query.HasOffset);
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
             if (offset > 0L)
             {
-                Assert.IsInstanceOf(typeof (Slice), algebra);
+                Assert.IsType(typeof (Slice), algebra);
 
                 Slice slice = (Slice) algebra;
-                Assert.AreEqual(offset, slice.Offset);
-                Assert.AreEqual(-1L, slice.Limit);
+                Assert.Equal(offset, slice.Offset);
+                Assert.Equal(-1L, slice.Limit);
             }
             else
             {
-                Assert.IsInstanceOf(typeof (Table), algebra);
+                Assert.IsType(typeof (Table), algebra);
 
                 Table table = (Table) algebra;
-                Assert.IsTrue(table.IsUnit);
+                Assert.True(table.IsUnit);
             }
         }
 
-        [TestCase(0, 0),
-         TestCase(100, 0),
-         TestCase(100, 5000),
-         TestCase(Int64.MaxValue, 0),
-         TestCase(0, Int64.MaxValue),
-         TestCase(-1, -1),
-         TestCase(-1, 100),
-         TestCase(Int64.MinValue, 0),
-         TestCase(0, Int64.MinValue)]
+        [Theory, InlineData(0, 0),
+         InlineData(100, 0),
+         InlineData(100, 5000),
+         InlineData(Int64.MaxValue, 0),
+         InlineData(0, Int64.MaxValue),
+         InlineData(-1, -1),
+         InlineData(-1, 100),
+         InlineData(Int64.MinValue, 0),
+         InlineData(0, Int64.MinValue)]
         public void QueryCompilerLimitOffset(long limit, long offset)
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -450,31 +448,31 @@ namespace VDS.RDF.Query.Compiler
             IQuery query = new Query();
             query.Limit = limit;
             query.Offset = offset;
-            Assert.IsTrue(limit >= 0L ? query.HasLimit : !query.HasLimit);
-            Assert.IsTrue(offset > 0L ? query.HasOffset : !query.HasOffset);
+            Assert.True(limit >= 0L ? query.HasLimit : !query.HasLimit);
+            Assert.True(offset > 0L ? query.HasOffset : !query.HasOffset);
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
             if (limit >= 0L || offset > 0L)
             {
-                Assert.IsInstanceOf(typeof (Slice), algebra);
+                Assert.IsType(typeof (Slice), algebra);
 
                 Slice slice = (Slice) algebra;
-                Assert.AreEqual(limit >= 0L ? limit : -1L, slice.Limit);
-                Assert.AreEqual(offset > 0L ? offset : 0L, slice.Offset);
+                Assert.Equal(limit >= 0L ? limit : -1L, slice.Limit);
+                Assert.Equal(offset > 0L ? offset : 0L, slice.Offset);
             }
             else
             {
-                Assert.IsInstanceOf(typeof (Table), algebra);
+                Assert.IsType(typeof (Table), algebra);
 
                 Table table = (Table) algebra;
-                Assert.IsTrue(table.IsUnit);
+                Assert.True(table.IsUnit);
             }
         }
 
-        [TestCase(QueryType.SelectAllDistinct),
-         TestCase(QueryType.SelectDistinct)]
+        [Theory, InlineData(QueryType.SelectAllDistinct),
+         InlineData(QueryType.SelectDistinct)]
         public void QueryCompilerDistinct(QueryType type)
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -485,11 +483,11 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof (Distinct), algebra);
+            Assert.IsType(typeof (Distinct), algebra);
         }
 
-        [TestCase(QueryType.SelectAllReduced),
-         TestCase(QueryType.SelectReduced)]
+        [Theory, InlineData(QueryType.SelectAllReduced),
+         InlineData(QueryType.SelectReduced)]
         public void QueryCompilerReduced(QueryType type)
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -500,12 +498,12 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof (Reduced), algebra);
+            Assert.IsType(typeof (Reduced), algebra);
         }
 
-        [TestCase("http://example.org", false),
-         TestCase("http://example.org", true),
-         TestCase("http://foo.bar/faz", false)]
+        [Theory, InlineData("http://example.org", false),
+         InlineData("http://example.org", true),
+         InlineData("http://foo.bar/faz", false)]
         public void QueryCompilerService(String endpoint, bool silent)
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -516,14 +514,14 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Service), algebra);
+            Assert.IsType(typeof (Service), algebra);
 
             Service service = (Service) algebra;
-            Assert.AreEqual(silent, service.IsSilent);
-            Assert.IsTrue(EqualityHelper.AreUrisEqual(endpointUri, service.EndpointUri));
+            Assert.Equal(silent, service.IsSilent);
+            Assert.True(EqualityHelper.AreUrisEqual(endpointUri, service.EndpointUri));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerBind1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -534,15 +532,15 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Extend), algebra);
+            Assert.IsType(typeof (Extend), algebra);
 
             Extend extend = (Extend) algebra;
-            Assert.AreEqual(1, extend.Assignments.Count);
-            Assert.AreEqual("x", extend.Assignments[0].Key);
-            Assert.AreEqual(expr, extend.Assignments[0].Value);
+            Assert.Equal(1, extend.Assignments.Count);
+            Assert.Equal("x", extend.Assignments[0].Key);
+            Assert.Equal(expr, extend.Assignments[0].Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerBind2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -558,17 +556,17 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Extend), algebra);
+            Assert.IsType(typeof (Extend), algebra);
 
             Extend extend = (Extend) algebra;
-            Assert.AreEqual(2, extend.Assignments.Count);
-            Assert.AreEqual("x", extend.Assignments[0].Key);
-            Assert.AreEqual(expr1, extend.Assignments[0].Value);
-            Assert.AreEqual("y", extend.Assignments[1].Key);
-            Assert.AreEqual(expr2, extend.Assignments[1].Value);
+            Assert.Equal(2, extend.Assignments.Count);
+            Assert.Equal("x", extend.Assignments[0].Key);
+            Assert.Equal(expr1, extend.Assignments[0].Value);
+            Assert.Equal("y", extend.Assignments[1].Key);
+            Assert.Equal(expr2, extend.Assignments[1].Value);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerFilter1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -579,14 +577,14 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Filter), algebra);
+            Assert.IsType(typeof (Filter), algebra);
 
             Filter filter = (Filter) algebra;
-            Assert.AreEqual(1, filter.Expressions.Count);
-            Assert.AreEqual(expr, filter.Expressions[0]);
+            Assert.Equal(1, filter.Expressions.Count);
+            Assert.Equal(expr, filter.Expressions[0]);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerMinus1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -598,21 +596,21 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof (Minus), algebra);
+            Assert.IsType(typeof (Minus), algebra);
 
             Minus minus = (Minus) algebra;
-            Assert.IsInstanceOf(typeof(Table), minus.Lhs);
-            Assert.IsInstanceOf(typeof(Bgp), minus.Rhs);
+            Assert.IsType(typeof(Table), minus.Lhs);
+            Assert.IsType(typeof(Bgp), minus.Rhs);
 
             Table lhs = (Table) minus.Lhs;
-            Assert.IsTrue(lhs.IsUnit);
+            Assert.True(lhs.IsUnit);
 
             Bgp rhs = (Bgp) minus.Rhs;
-            Assert.AreEqual(1, rhs.TriplePatterns.Count);
-            Assert.IsTrue(rhs.TriplePatterns.Contains(t));
+            Assert.Equal(1, rhs.TriplePatterns.Count);
+            Assert.True(rhs.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerMinus2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -626,22 +624,22 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(Minus), algebra);
+            Assert.IsType(typeof(Minus), algebra);
 
             Minus minus = (Minus)algebra;
-            Assert.IsInstanceOf(typeof(Bgp), minus.Lhs);
-            Assert.IsInstanceOf(typeof(Bgp), minus.Rhs);
+            Assert.IsType(typeof(Bgp), minus.Lhs);
+            Assert.IsType(typeof(Bgp), minus.Rhs);
 
             Bgp lhs = (Bgp)minus.Lhs;
-            Assert.AreEqual(1, lhs.TriplePatterns.Count);
-            Assert.IsTrue(lhs.TriplePatterns.Contains(t1));
+            Assert.Equal(1, lhs.TriplePatterns.Count);
+            Assert.True(lhs.TriplePatterns.Contains(t1));
 
             Bgp rhs = (Bgp)minus.Rhs;
-            Assert.AreEqual(1, rhs.TriplePatterns.Count);
-            Assert.IsTrue(rhs.TriplePatterns.Contains(t2));
+            Assert.Equal(1, rhs.TriplePatterns.Count);
+            Assert.True(rhs.TriplePatterns.Contains(t2));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerOptional1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -653,21 +651,21 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(LeftJoin), algebra);
+            Assert.IsType(typeof(LeftJoin), algebra);
 
             LeftJoin leftJoin = (LeftJoin)algebra;
-            Assert.IsInstanceOf(typeof(Table), leftJoin.Lhs);
-            Assert.IsInstanceOf(typeof(Bgp), leftJoin.Rhs);
+            Assert.IsType(typeof(Table), leftJoin.Lhs);
+            Assert.IsType(typeof(Bgp), leftJoin.Rhs);
 
             Table lhs = (Table)leftJoin.Lhs;
-            Assert.IsTrue(lhs.IsUnit);
+            Assert.True(lhs.IsUnit);
 
             Bgp rhs = (Bgp)leftJoin.Rhs;
-            Assert.AreEqual(1, rhs.TriplePatterns.Count);
-            Assert.IsTrue(rhs.TriplePatterns.Contains(t));
+            Assert.Equal(1, rhs.TriplePatterns.Count);
+            Assert.True(rhs.TriplePatterns.Contains(t));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerOptional2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -681,22 +679,22 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(LeftJoin), algebra);
+            Assert.IsType(typeof(LeftJoin), algebra);
 
             LeftJoin leftJoin = (LeftJoin)algebra;
-            Assert.IsInstanceOf(typeof(Bgp), leftJoin.Lhs);
-            Assert.IsInstanceOf(typeof(Bgp), leftJoin.Rhs);
+            Assert.IsType(typeof(Bgp), leftJoin.Lhs);
+            Assert.IsType(typeof(Bgp), leftJoin.Rhs);
 
             Bgp lhs = (Bgp)leftJoin.Lhs;
-            Assert.AreEqual(1, lhs.TriplePatterns.Count);
-            Assert.IsTrue(lhs.TriplePatterns.Contains(t1));
+            Assert.Equal(1, lhs.TriplePatterns.Count);
+            Assert.True(lhs.TriplePatterns.Contains(t1));
 
             Bgp rhs = (Bgp)leftJoin.Rhs;
-            Assert.AreEqual(1, rhs.TriplePatterns.Count);
-            Assert.IsTrue(rhs.TriplePatterns.Contains(t2));
+            Assert.Equal(1, rhs.TriplePatterns.Count);
+            Assert.True(rhs.TriplePatterns.Contains(t2));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerGroup1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -712,24 +710,24 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof (Join), algebra);
+            Assert.IsType(typeof (Join), algebra);
             Join join = (Join) algebra;
 
-            Assert.IsInstanceOf(typeof (Bgp), join.Lhs);
+            Assert.IsType(typeof (Bgp), join.Lhs);
             Bgp bgp = (Bgp) join.Lhs;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
 
-            Assert.IsInstanceOf(typeof (Table), join.Rhs);
+            Assert.IsType(typeof (Table), join.Rhs);
             Table table = (Table) join.Rhs;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(1, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x")));
+            Assert.Equal(1, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerGroup2()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -750,29 +748,29 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof (Filter), algebra);
+            Assert.IsType(typeof (Filter), algebra);
             Filter f = (Filter) algebra;
-            Assert.AreEqual(1, f.Expressions.Count);
-            Assert.AreEqual(expr, f.Expressions[0]);
+            Assert.Equal(1, f.Expressions.Count);
+            Assert.Equal(expr, f.Expressions[0]);
 
-            Assert.IsInstanceOf(typeof (Join), f.InnerAlgebra);
+            Assert.IsType(typeof (Join), f.InnerAlgebra);
             Join join = (Join) f.InnerAlgebra;
 
-            Assert.IsInstanceOf(typeof (Bgp), join.Lhs);
+            Assert.IsType(typeof (Bgp), join.Lhs);
             Bgp bgp = (Bgp) join.Lhs;
-            Assert.AreEqual(1, bgp.TriplePatterns.Count);
-            Assert.IsTrue(bgp.TriplePatterns.Contains(t));
+            Assert.Equal(1, bgp.TriplePatterns.Count);
+            Assert.True(bgp.TriplePatterns.Contains(t));
 
-            Assert.IsInstanceOf(typeof (Table), join.Rhs);
+            Assert.IsType(typeof (Table), join.Rhs);
             Table table = (Table) join.Rhs;
-            Assert.IsFalse(table.IsEmpty);
-            Assert.IsFalse(table.IsUnit);
+            Assert.False(table.IsEmpty);
+            Assert.False(table.IsUnit);
 
-            Assert.AreEqual(1, table.Data.Count);
-            Assert.IsTrue(table.Data.All(s => s.ContainsVariable("x")));
+            Assert.Equal(1, table.Data.Count);
+            Assert.True(table.Data.All(s => s.ContainsVariable("x")));
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerSubQuery1()
         {
             IQueryCompiler compiler = this.CreateInstance();
@@ -785,24 +783,24 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
 
             Project outerProject = (Project) algebra;
-            Assert.AreEqual(1, outerProject.Projections.Count);
-            Assert.IsTrue(outerProject.Projections.Contains("y"));
-            Assert.IsInstanceOf(typeof(Project), outerProject.InnerAlgebra);
+            Assert.Equal(1, outerProject.Projections.Count);
+            Assert.True(outerProject.Projections.Contains("y"));
+            Assert.IsType(typeof(Project), outerProject.InnerAlgebra);
 
             Project innerProject = (Project) outerProject.InnerAlgebra;
-            Assert.IsTrue(innerProject.Projections.Contains("x"));
-            Assert.IsInstanceOf(typeof(Table), innerProject.InnerAlgebra);
+            Assert.True(innerProject.Projections.Contains("x"));
+            Assert.IsType(typeof(Table), innerProject.InnerAlgebra);
 
             Table table = (Table) innerProject.InnerAlgebra;
-            Assert.IsTrue(table.IsUnit);
+            Assert.True(table.IsUnit);
         }
 
-        [TestCase("x"),
-         TestCase("x", "y"),
-         TestCase("x", "y", "z")]
+        [Theory, InlineData("x"),
+         InlineData("x", "y"),
+         InlineData("x", "y", "z")]
         public void QueryCompilerProject(params String[] vars)
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
@@ -815,17 +813,17 @@ namespace VDS.RDF.Query.Compiler
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
 
             Project project = (Project) algebra;
-            Assert.AreEqual(vars.Length, project.Projections.Count);
+            Assert.Equal(vars.Length, project.Projections.Count);
             foreach (String var in vars)
             {
-                Assert.IsTrue(project.Projections.Contains(var), "Project for ?" + var +  " missing");
+                Assert.True(project.Projections.Contains(var), "Project for ?" + var +  " missing");
             }
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerGroupBy1()
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
@@ -836,24 +834,24 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
             Project project = (Project)algebra;
-            Assert.AreEqual(1, project.Projections.Count);
-            Assert.IsTrue(project.Projections.Contains("x"));
+            Assert.Equal(1, project.Projections.Count);
+            Assert.True(project.Projections.Contains("x"));
 
-            Assert.IsInstanceOf(typeof(Extend), project.InnerAlgebra);
+            Assert.IsType(typeof(Extend), project.InnerAlgebra);
             Extend extend = (Extend) project.InnerAlgebra;
-            Assert.AreEqual(1, extend.Assignments.Count);
-            Assert.AreEqual(query.Projections.First().Key, extend.Assignments.First().Key);
+            Assert.Equal(1, extend.Assignments.Count);
+            Assert.Equal(query.Projections.First().Key, extend.Assignments.First().Key);
 
-            Assert.IsInstanceOf(typeof(GroupBy), extend.InnerAlgebra);
+            Assert.IsType(typeof(GroupBy), extend.InnerAlgebra);
             GroupBy group = (GroupBy) extend.InnerAlgebra;
-            Assert.AreEqual(0, group.GroupExpressions.Count);
-            Assert.AreEqual(1, group.Aggregators.Count);
-            Assert.AreEqual(query.Projections.First().Value, group.Aggregators.First().Key);
+            Assert.Equal(0, group.GroupExpressions.Count);
+            Assert.Equal(1, group.Aggregators.Count);
+            Assert.Equal(query.Projections.First().Value, group.Aggregators.First().Key);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerGroupBy2()
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
@@ -865,25 +863,25 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
             Project project = (Project)algebra;
-            Assert.AreEqual(2, project.Projections.Count);
-            Assert.IsTrue(project.Projections.Contains("x"));
+            Assert.Equal(2, project.Projections.Count);
+            Assert.True(project.Projections.Contains("x"));
 
-            Assert.IsInstanceOf(typeof(Extend), project.InnerAlgebra);
+            Assert.IsType(typeof(Extend), project.InnerAlgebra);
             Extend extend = (Extend)project.InnerAlgebra;
-            Assert.AreEqual(2, extend.Assignments.Count);
-            Assert.AreEqual(query.Projections.First().Key, extend.Assignments.First().Key);
-            Assert.AreEqual(query.Projections.Last().Key, extend.Assignments.Last().Key);
+            Assert.Equal(2, extend.Assignments.Count);
+            Assert.Equal(query.Projections.First().Key, extend.Assignments.First().Key);
+            Assert.Equal(query.Projections.Last().Key, extend.Assignments.Last().Key);
 
-            Assert.IsInstanceOf(typeof(GroupBy), extend.InnerAlgebra);
+            Assert.IsType(typeof(GroupBy), extend.InnerAlgebra);
             GroupBy group = (GroupBy)extend.InnerAlgebra;
-            Assert.AreEqual(0, group.GroupExpressions.Count);
-            Assert.AreEqual(1, group.Aggregators.Count);
-            Assert.AreEqual(query.Projections.First().Value, group.Aggregators.First().Key);
+            Assert.Equal(0, group.GroupExpressions.Count);
+            Assert.Equal(1, group.Aggregators.Count);
+            Assert.Equal(query.Projections.First().Value, group.Aggregators.First().Key);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerGroupBy3()
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
@@ -895,26 +893,26 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
             Project project = (Project)algebra;
-            Assert.AreEqual(2, project.Projections.Count);
-            Assert.IsTrue(project.Projections.Contains("x"));
+            Assert.Equal(2, project.Projections.Count);
+            Assert.True(project.Projections.Contains("x"));
 
-            Assert.IsInstanceOf(typeof(Extend), project.InnerAlgebra);
+            Assert.IsType(typeof(Extend), project.InnerAlgebra);
             Extend extend = (Extend)project.InnerAlgebra;
-            Assert.AreEqual(2, extend.Assignments.Count);
-            Assert.AreEqual(query.Projections.First().Key, extend.Assignments.First().Key);
-            Assert.AreEqual(query.Projections.Last().Key, extend.Assignments.Last().Key);
+            Assert.Equal(2, extend.Assignments.Count);
+            Assert.Equal(query.Projections.First().Key, extend.Assignments.First().Key);
+            Assert.Equal(query.Projections.Last().Key, extend.Assignments.Last().Key);
 
-            Assert.IsInstanceOf(typeof(GroupBy), extend.InnerAlgebra);
+            Assert.IsType(typeof(GroupBy), extend.InnerAlgebra);
             GroupBy group = (GroupBy)extend.InnerAlgebra;
-            Assert.AreEqual(0, group.GroupExpressions.Count);
-            Assert.AreEqual(2, group.Aggregators.Count);
-            Assert.AreEqual(query.Projections.First().Value, group.Aggregators.First().Key);
-            Assert.AreEqual(query.Projections.Last().Value, group.Aggregators.Last().Key);
+            Assert.Equal(0, group.GroupExpressions.Count);
+            Assert.Equal(2, group.Aggregators.Count);
+            Assert.Equal(query.Projections.First().Value, group.Aggregators.First().Key);
+            Assert.Equal(query.Projections.Last().Value, group.Aggregators.Last().Key);
         }
 
-        [Test]
+        [Fact]
         public void QueryCompilerHaving1()
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
@@ -926,26 +924,26 @@ namespace VDS.RDF.Query.Compiler
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
 
-            Assert.IsInstanceOf(typeof(Project), algebra);
+            Assert.IsType(typeof(Project), algebra);
             Project project = (Project) algebra;
-            Assert.AreEqual(1, project.Projections.Count);
-            Assert.IsTrue(project.Projections.Contains("x"));
+            Assert.Equal(1, project.Projections.Count);
+            Assert.True(project.Projections.Contains("x"));
 
-            Assert.IsInstanceOf(typeof(Extend), project.InnerAlgebra);
+            Assert.IsType(typeof(Extend), project.InnerAlgebra);
             Extend extend = (Extend)project.InnerAlgebra;
-            Assert.AreEqual(1, extend.Assignments.Count);
-            Assert.AreEqual(query.Projections.First().Key, extend.Assignments.First().Key);
+            Assert.Equal(1, extend.Assignments.Count);
+            Assert.Equal(query.Projections.First().Key, extend.Assignments.First().Key);
 
-            Assert.IsInstanceOf(typeof(Filter), extend.InnerAlgebra);
+            Assert.IsType(typeof(Filter), extend.InnerAlgebra);
             Filter having = (Filter)extend.InnerAlgebra;
             // Should not be equal because the 
-            Assert.AreNotEqual(having.Expressions.First(), query.HavingConditions[0]);
+            Assert.NotEqual(having.Expressions.First(), query.HavingConditions[0]);
 
-            Assert.IsInstanceOf(typeof(GroupBy), having.InnerAlgebra);
+            Assert.IsType(typeof(GroupBy), having.InnerAlgebra);
             GroupBy group = (GroupBy)having.InnerAlgebra;
-            Assert.AreEqual(0, group.GroupExpressions.Count);
-            Assert.AreEqual(1, group.Aggregators.Count);
-            Assert.AreEqual(query.Projections.First().Value, group.Aggregators.First().Key);
+            Assert.Equal(0, group.GroupExpressions.Count);
+            Assert.Equal(1, group.Aggregators.Count);
+            Assert.Equal(query.Projections.First().Value, group.Aggregators.First().Key);
         }
     }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using VDS.RDF.Query.Expressions.Aggregates.Sparql;
 using VDS.RDF.Query.Expressions.Primary;
 
@@ -16,8 +16,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             // Should be equal to itself
             foreach (IAggregateExpression agg in aggs)
             {
-                Assert.AreEqual(agg, agg, "Should be equal to self");
-                Assert.AreEqual(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
+                Assert.Equal(agg, agg, "Should be equal to self");
+                Assert.Equal(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
             }
 
             // Should be equal to all others
@@ -28,8 +28,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
                 {
                     if (i == j) continue;
 
-                    Assert.AreEqual(agg, aggs[j], "Should be equal to other aggregates");
-                    Assert.AreEqual(agg.GetHashCode(), aggs[j].GetHashCode(), "Should have same hash code as other aggregates");
+                    Assert.Equal(agg, aggs[j], "Should be equal to other aggregates");
+                    Assert.Equal(agg.GetHashCode(), aggs[j].GetHashCode(), "Should have same hash code as other aggregates");
                 }
             }
         }
@@ -39,8 +39,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             // Should be equal to itself
             foreach (IAggregateExpression agg in aggs)
             {
-                Assert.AreEqual(agg, agg, "Should be equal to self");
-                Assert.AreEqual(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
+                Assert.Equal(agg, agg, "Should be equal to self");
+                Assert.Equal(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
             }
 
             // Should not be equal to all others
@@ -51,12 +51,12 @@ namespace VDS.RDF.Query.Expressions.Aggregates
                 {
                     if (i == j) continue;
 
-                    Assert.AreNotEqual(agg, aggs[j], "Should not be equal to other aggregates");
+                    Assert.NotEqual(agg, aggs[j], "Should not be equal to other aggregates");
                 }
             }
         }
 
-        [Test]
+        [Fact]
         public void AggregateEqualityCount()
         {
             IAggregateExpression[] aggs = new IAggregateExpression[]
@@ -69,7 +69,7 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             TestNotEquals(aggs);
         }
 
-        [Test]
+        [Fact]
         public void AggregateEqualityCountAll()
         {
             IAggregateExpression[] aggs = new IAggregateExpression[]
@@ -82,7 +82,7 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             TestNotEquals(aggs);
         }
 
-        [Test]
+        [Fact]
         public void AggregateEqualityCountDistinct()
         {
             IAggregateExpression[] aggs = new IAggregateExpression[]
@@ -95,7 +95,7 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             TestNotEquals(aggs);
         }
 
-        [Test]
+        [Fact]
         public void AggregateEqualityCountAllDistinct()
         {
             IAggregateExpression[] aggs = new IAggregateExpression[]

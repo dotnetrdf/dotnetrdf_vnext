@@ -1,8 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace VDS.RDF.Query.Algebra.Transforms
 {
-    [TestFixture]
     public class PromoteTableEmptyTests
         : AbstractAlgebraTransformTests
     {
@@ -11,50 +10,50 @@ namespace VDS.RDF.Query.Algebra.Transforms
             return new PromoteTableEmpty();
         }
 
-        [Test]
+        [Fact]
         public void PromoteTableEmptyJoin1()
         {
             IAlgebra lhs = Table.CreateEmpty();
             IAlgebra rhs = Table.CreateUnit();
 
             IAlgebra join = Join.CreateDirect(lhs, rhs);
-            Assert.IsInstanceOf(typeof(Join), join);
+            Assert.IsType(typeof(Join), join);
 
             CheckTransform(join, lhs);
         }
 
-        [Test]
+        [Fact]
         public void PromoteTableEmptyJoin2()
         {
             IAlgebra lhs = Table.CreateUnit();
             IAlgebra rhs = Table.CreateEmpty();
 
             IAlgebra join = Join.CreateDirect(lhs, rhs);
-            Assert.IsInstanceOf(typeof(Join), join);
+            Assert.IsType(typeof(Join), join);
 
             CheckTransform(join, rhs);
         }
 
-        [Test]
+        [Fact]
         public void PromoteTableEmptyJoin3()
         {
             IAlgebra lhs = Table.CreateEmpty();
             IAlgebra rhs = Table.CreateEmpty();
 
             IAlgebra join = Join.CreateDirect(lhs, rhs);
-            Assert.IsInstanceOf(typeof(Join), join);
+            Assert.IsType(typeof(Join), join);
 
             CheckTransform(join, lhs);
         }
 
-        [Test]
+        [Fact]
         public void PromoteTableEmptyJoin4()
         {
             IAlgebra lhs = Table.CreateUnit();
             IAlgebra rhs = Join.CreateDirect(Table.CreateUnit(), Table.CreateEmpty());
 
             IAlgebra join = Join.CreateDirect(lhs, rhs);
-            Assert.IsInstanceOf(typeof(Join), join);
+            Assert.IsType(typeof(Join), join);
 
             CheckTransform(join, Table.CreateEmpty());
         }

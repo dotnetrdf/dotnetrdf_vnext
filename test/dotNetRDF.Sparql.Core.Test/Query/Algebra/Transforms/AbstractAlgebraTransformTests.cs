@@ -1,5 +1,5 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace VDS.RDF.Query.Algebra.Transforms
 {
@@ -52,7 +52,7 @@ namespace VDS.RDF.Query.Algebra.Transforms
             Console.WriteLine("Expected:");
             Console.WriteLine(expected.ToString());
 
-            Assert.IsTrue(actual.Equals(expected));
+            Assert.True(actual.Equals(expected));
         }
     }
 }
