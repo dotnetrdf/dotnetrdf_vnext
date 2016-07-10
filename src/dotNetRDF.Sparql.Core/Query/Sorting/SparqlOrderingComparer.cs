@@ -128,7 +128,7 @@ namespace VDS.RDF.Query.Sorting
                                     return DateTimeCompare(x, y);
                                 case XmlSpecsHelper.XmlSchemaDataTypeString:
                                     //Both Strings so use Lexical string ordering
-                                    return String.Compare(x.Value, y.Value, Options.DefaultCulture, Options.DefaultComparisonOptions);
+                                    return Options.DefaultCulture.CompareInfo.Compare(x.Value, y.Value, Options.DefaultComparisonOptions);
                                 default:
                                     //Use node ordering
                                     return x.CompareTo(y);
