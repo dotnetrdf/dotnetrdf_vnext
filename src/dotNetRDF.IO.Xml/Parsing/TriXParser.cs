@@ -116,11 +116,17 @@ namespace VDS.RDF.Parsing
                     inputDoc.Load(temp);
                 }
 #else
-                this.RaiseWarning("XSLT is not supported on your platform, if your TriX data uses the XSLT based extension mechanism it may not be parsed correctly");
+                //this.RaiseWarning("XSLT is not supported on your platform, if your TriX data uses the XSLT based extension mechanism it may not be parsed correctly");
+                foreach (XmlNode child in doc.ChildNodes)
+                {
+                    if (child.NodeType != XmlNodeType.ProcessingInstruction) continue;
+                    if (child.Name != "xml-stylesheet") continue;
+                    throw new RdfParseException("TriX XSLT extensions are not supported.");
+                }
 #endif
 
-                //Start parsing
-                if (!inputReady) inputDoc = doc;
+                    //Start parsing
+                    if (!inputReady) inputDoc = doc;
                 TriXParserContext context = new TriXParserContext(handler, profile);
                 this.TryParseGraphset(inputDoc, context);
 
