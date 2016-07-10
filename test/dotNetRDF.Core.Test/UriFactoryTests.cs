@@ -238,8 +238,8 @@ namespace VDS.RDF
         {
             try
             {
-                Uri u1 = new Uri("http://example.org/#test");
-                Uri u2 = new Uri("http://example.org/?test");
+                Uri u1 = new Uri("http://internUri3.example.org/#test");
+                Uri u2 = new Uri("http://internUri3.example.org/?test");
 
                 UriFactory.Intern(u2);
                 Assert.True(UriFactory.IsInterned(u2));
