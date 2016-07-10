@@ -53,8 +53,8 @@ namespace VDS.RDF.Query.Expressions.Functions.Sparql.String
         /// <returns></returns>
         protected override IValuedNode EvaluateInternal(INode stringLit)
         {
-            if (stringLit.HasLanguage) return new StringNode(stringLit.Value.ToUpper(Options.DefaultCulture), stringLit.Language);
-            return stringLit.HasDataType ? new StringNode(stringLit.Value.ToUpper(Options.DefaultCulture), stringLit.DataType) : new StringNode(stringLit.Value.ToUpper(Options.DefaultCulture));
+            if (stringLit.HasLanguage) return new StringNode(Options.DefaultCulture.TextInfo.ToUpper(stringLit.Value), stringLit.Language);
+            return stringLit.HasDataType ? new StringNode(Options.DefaultCulture.TextInfo.ToUpper(stringLit.Value), stringLit.DataType) : new StringNode(Options.DefaultCulture.TextInfo.ToUpper(stringLit.Value));
         }
 
         public override IExpression Copy(IExpression argument)

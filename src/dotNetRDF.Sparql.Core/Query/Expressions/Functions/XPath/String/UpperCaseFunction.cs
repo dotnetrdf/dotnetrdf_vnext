@@ -49,7 +49,7 @@ namespace VDS.RDF.Query.Expressions.Functions.XPath.String
         /// <returns></returns>
         protected override IValuedNode EvaluateInternal(INode stringLit)
         {
-            return new StringNode(stringLit.Value.ToUpper(Options.DefaultCulture), UriFactory.Create(XmlSpecsHelper.XmlSchemaDataTypeString));
+            return new StringNode(Options.DefaultCulture.TextInfo.ToUpper(stringLit.Value), UriFactory.Create(XmlSpecsHelper.XmlSchemaDataTypeString));
         }
 
         public override IExpression Copy(IExpression argument)
