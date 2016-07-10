@@ -76,25 +76,9 @@ namespace VDS.RDF.Writing
         /// <param name="output">Stream to save to</param>
         public void Save(IGraph g, TextWriter output)
         {
-            try
-            {
-                g.Namespaces.Import(this._defaultNamespaces);
-                HtmlGraphWriterContext context = new HtmlGraphWriterContext(g, output);
-                this.GenerateOutput(context);
-                output.Close();
-            }
-            catch
-            {
-                try
-                {
-                    output.Close();
-                }
-                catch
-                {
-                    //No Catch Actions
-                }
-                throw;
-            }
+            g.Namespaces.Import(this._defaultNamespaces);
+            HtmlGraphWriterContext context = new HtmlGraphWriterContext(g, output);
+            this.GenerateOutput(context);
         }
 
         public void Save(IGraphStore graphStore, TextWriter output)

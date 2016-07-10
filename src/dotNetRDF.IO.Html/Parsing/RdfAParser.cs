@@ -29,11 +29,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using VDS.RDF;
 using VDS.RDF.Graphs;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing.Contexts;
 using VDS.RDF.Parsing.Handlers;
 using VDS.RDF.Query;
+using VDS.RDF.Specifications;
 
 //SLT: Find alternative to HttpUtility.DecodeHtml for Silverlight
 
@@ -167,7 +169,7 @@ namespace VDS.RDF.Parsing
         /// </summary>
         /// <param name="handler">RDF Handler to use</param>
         /// <param name="input">Input to read from</param>
-        public void Load(IRdfHandler handler, TextReader input)
+        public void Load(IRdfHandler handler, TextReader input, IParserProfile profile)
         {
             if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
             if (input == null) throw new RdfParseException("Cannot read RDF from a null TextReader");
@@ -177,24 +179,12 @@ namespace VDS.RDF.Parsing
                 HtmlDocument doc = new HtmlDocument();
                 doc.Load(input);
 
-                RdfAParserContext context = new RdfAParserContext(handler, doc);
+                RdfAParserContext context = new RdfAParserContext(handler, doc, profile);
                 this.Parse(context);
             }
             catch
             {
                 throw;
-            }
-            finally
-            {
-                try
-                {
-                    input.Close();
-                }
-                catch
-                {
-                    //Catch is just here in case something goes wrong with closing the stream
-                    //This error can be ignored
-                }
             }
         }
 
@@ -207,7 +197,7 @@ namespace VDS.RDF.Parsing
         {
             if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
             if (filename == null) throw new RdfParseException("Cannot read RDF from a null File");
-            this.Load(handler, new StreamReader(filename, Encoding.UTF8));
+            this.Load(handler, new StreamReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8));
         }
 
         private void Parse(RdfAParserContext context)
@@ -637,7 +627,7 @@ namespace VDS.RDF.Parsing
             //If the Subject is not a null then we'll generate type triples if there's any @typeof attributes
             if (newSubj != null)
             {
-                INode rdfType = context.Handler.CreateUriNode(RdfSpecsHelper.RdfType);
+                INode rdfType = context.Handler.CreateUriNode(UriFactory.Create(RdfSpecsHelper.RdfType));
                 if (type)
                 {
                     foreach (INode dtObj in this.ParseComplexAttribute(context, evalContext, currElement.Attributes["typeof"].Value))
@@ -727,7 +717,7 @@ namespace VDS.RDF.Parsing
                 {
                     //We can only process this Triple if we were able to get a valid URI Node for the Datatype
                     if (dtNode.NodeType != NodeType.Uri) throw new RdfParseException("Cannot use a non-URI Node as a Dataype");
-                    dt = ((IUriNode)dtNode).Uri;
+                    dt = ((BaseUriNode)dtNode).Uri;
 
                     if (!dt.AbsoluteUri.Equals(RdfSpecsHelper.RdfXmlLiteral))
                     {
@@ -1251,7 +1241,8 @@ namespace VDS.RDF.Parsing
 
                 //Now resolve the URI and apply it
                 Uri uri = UriFactory.ResolveUri(uriData.ToString(), baseUri);
-                if (!(uri.EndsWith("/") || uri.EndsWith("#"))) uri += "#";
+                var uriStr = uri.ToString();
+                if (!(uriStr.EndsWith("/") || uriStr.EndsWith("#"))) uri = UriFactory.Create(uriStr + "#");
                 String prefix = prefixData.ToString();
                 if (evalContext.NamespaceMap.HasNamespace(prefix))
                 {
@@ -1317,8 +1308,8 @@ namespace VDS.RDF.Parsing
                                 INode nsNode = r["NamespaceURI"];
                                 if (prefixNode.NodeType == NodeType.Literal && nsNode.NodeType == NodeType.Literal)
                                 {
-                                    String prefix = ((ILiteralNode)prefixNode).Value.ToLower();
-                                    String ns = ((ILiteralNode)nsNode).Value;
+                                    String prefix = ((BaseLiteralNode)prefixNode).Value.ToLower();
+                                    String ns = ((BaseLiteralNode)nsNode).Value;
                                     evalContext.LocalVocabulary.AddNamespace(prefix, ns);
                                 }
                             }
@@ -1335,8 +1326,8 @@ namespace VDS.RDF.Parsing
                                 INode uriNode = r["URI"];
                                 if (termNode.NodeType == NodeType.Literal && uriNode.NodeType == NodeType.Literal)
                                 {
-                                    String term = ((ILiteralNode)termNode).Value;
-                                    String uri = ((ILiteralNode)uriNode).Value;
+                                    String term = ((BaseLiteralNode)termNode).Value;
+                                    String uri = ((BaseLiteralNode)uriNode).Value;
                                     evalContext.LocalVocabulary.AddTerm(term, uri);
                                 }
                             }

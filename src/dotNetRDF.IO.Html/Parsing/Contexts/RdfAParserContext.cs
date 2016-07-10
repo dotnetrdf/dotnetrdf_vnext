@@ -48,42 +48,20 @@ namespace VDS.RDF.Parsing.Contexts
         /// <summary>
         /// Creates a new Parser Context
         /// </summary>
-        /// <param name="g">Graph</param>
-        /// <param name="document">XML Document</param>
-        public RdfAParserContext(IGraph g, HtmlDocument document)
-            : this(g, document, false) { }
-
-        /// <summary>
-        /// Creates a new Parser Context
-        /// </summary>
-        /// <param name="g">Graph</param>
+        /// <param name="handler">RDF Handler to use</param>
         /// <param name="document">HTML Document</param>
-        /// <param name="traceParsing">Whether to Trace Parsing</param>
-        public RdfAParserContext(IGraph g, HtmlDocument document, bool traceParsing)
-            : base(g, traceParsing) 
-        {
-            this._document = document;
-        }
+        public RdfAParserContext(IRdfHandler handler, HtmlDocument document, IParserProfile profile)
+            : this(handler, document, false, profile) { }
 
         /// <summary>
         /// Creates a new Parser Context
         /// </summary>
         /// <param name="handler">RDF Handler to use</param>
         /// <param name="document">HTML Document</param>
-        /// <param name="traceParsing">Whether to Trace Parsing</param>
-        public RdfAParserContext(IRdfHandler handler, HtmlDocument document, bool traceParsing)
-            : base(handler, traceParsing)
-        {
+        public RdfAParserContext(IRdfHandler handler, HtmlDocument document,bool traceParsing, IParserProfile profile)
+            : base(handler, traceParsing, profile) {
             this._document = document;
         }
-
-        /// <summary>
-        /// Creates a new Parser Context
-        /// </summary>
-        /// <param name="handler">RDF Handler to use</param>
-        /// <param name="document">HTML Document</param>
-        public RdfAParserContext(IRdfHandler handler, HtmlDocument document)
-            : this(handler, document, false) { }
 
         /// <summary>
         /// Gets the HTML Document
