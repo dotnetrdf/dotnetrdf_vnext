@@ -28,7 +28,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using VDS.Common.References;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing;
 using VDS.RDF.Writing.Formatting;
