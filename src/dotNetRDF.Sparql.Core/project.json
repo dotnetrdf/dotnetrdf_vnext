@@ -1,16 +1,17 @@
 ﻿{
   "version": "2.0.0-*",
-
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "dotNetRDF.Core": "2.0.0",
     "dotNetRDF.IO.Core": "2.0.0",
     "VDS.Common": "2.0.0"
   },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "buildOptions": {
+    "define": [ "NO_NORM" ]
   }
 }
