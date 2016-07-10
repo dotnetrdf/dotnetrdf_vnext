@@ -35,11 +35,11 @@ using VDS.RDF.Writing;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("dotNetRDF.IO.Json")]
-[assembly: AssemblyDescription("JSON IO APIs for dotNetRDF (.Net 4.0)")]
+[assembly: AssemblyDescription("JSON IO APIs for dotNetRDF")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Visual Design Studios")]
-[assembly: AssemblyProduct("dotNetRDF.IO.Json.Net40")]
-[assembly: AssemblyCopyright("Copyright © dotNetRDF Project 2014")]
+[assembly: AssemblyProduct("dotNetRDF.IO.Json")]
+[assembly: AssemblyCopyright("Copyright © dotNetRDF Project 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -61,8 +61,8 @@ using VDS.RDF.Writing;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyFileVersion("1.9.0.0")]
+[assembly: AssemblyVersion("2.0.0.*")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
 
 [assembly: RdfIO(SyntaxName = "RDF/JSON", Encoding = "utf-8", CanonicalMimeType = "application/rdf+json", MimeTypes = new string[]{ "application/json", "text/json" }, CanonicalFileExtension = ".rj", ParserType = typeof(RdfJsonParser), WriterType = typeof(RdfJsonWriter))]
 [assembly: RdfIO(SyntaxName = "GZipped RDF/JSON", Encoding = "utf-8", CanonicalMimeType = "application/rdf+json", MimeTypes = new string[] { "application/json", "text/json" }, CanonicalFileExtension = ".rj.gz", ParserType = typeof(GZippedRdfJsonParser), WriterType = typeof(GZippedRdfJsonWriter))]
