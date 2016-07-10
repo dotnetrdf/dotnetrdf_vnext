@@ -51,18 +51,10 @@ namespace VDS.RDF.Parsing
             if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
             if (input == null) throw new RdfParseException("Cannot read RDF from a null Stream");
 
-            try
-            {
-                input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
-                profile = profile.EnsureParserProfile();
+            input.CheckEncoding(Encoding.UTF8, this.RaiseWarning);
+            profile = profile.EnsureParserProfile();
 
-                this.Parse(handler, input, profile);
-                input.Close();
-            }
-            finally
-            {
-                input.CloseQuietly();
-            }
+            this.Parse(handler, input, profile);
         }
 
         /// <summary>

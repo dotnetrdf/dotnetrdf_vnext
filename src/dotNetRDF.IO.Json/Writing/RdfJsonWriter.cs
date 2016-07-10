@@ -69,27 +69,10 @@ namespace VDS.RDF.Writing
         /// <param name="output">Stream to save to</param>
         public override void Save(IGraph g, TextWriter output)
         {
-            try
-            {
-                //Always issue a Warning
-                this.RaiseWarning("RDF/JSON does not contain any Namespace information.  If you read this serialized data back in at a later date you may not be able to reserialize it to Namespace reliant formats (like RDF/XML)");
+            //Always issue a Warning
+            this.RaiseWarning("RDF/JSON does not contain any Namespace information.  If you read this serialized data back in at a later date you may not be able to reserialize it to Namespace reliant formats (like RDF/XML)");
 
-                this.GenerateOutput(g, output);
-                output.Close();
-            }
-            catch
-            {
-                try
-                {
-                    //Close the Output Stream
-                    output.Close();
-                }
-                catch
-                {
-                    //No Catch actions here
-                }
-                throw;
-            }
+            this.GenerateOutput(g, output);
         }
 
         /// <summary>
