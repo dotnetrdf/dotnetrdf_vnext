@@ -218,7 +218,7 @@ namespace VDS.RDF.Writing
         /// </summary>
         public void Close()
         {
-            this._writer.Close();
+            this.Flush();
         }
 
         /// <summary>
