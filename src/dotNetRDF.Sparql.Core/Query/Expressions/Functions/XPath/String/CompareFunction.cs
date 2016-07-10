@@ -66,7 +66,7 @@ namespace VDS.RDF.Query.Expressions.Functions.XPath.String
         /// <returns></returns>
         protected override IValuedNode EvaluateInternal(IValuedNode stringLit, IValuedNode arg)
         {
-            return new LongNode(string.Compare(stringLit.Value, arg.Value, Options.DefaultCulture, Options.DefaultComparisonOptions));
+            return new LongNode(Options.DefaultCulture.CompareInfo.Compare(stringLit.Value, arg.Value, Options.DefaultComparisonOptions));
         }
     }
 }
