@@ -50,7 +50,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Sparql.String
         /// <returns></returns>
         protected override bool ValueInternal(INode stringLit, INode argLit)
         {
-            return stringLit.Value.EndsWith(argLit.Value, false, Options.DefaultCulture);
+            return Options.DefaultCulture.CompareInfo.IsSuffix(stringLit.Value, argLit.Value);
         }
 
         public override IExpression Copy(IExpression arg1, IExpression arg2)
