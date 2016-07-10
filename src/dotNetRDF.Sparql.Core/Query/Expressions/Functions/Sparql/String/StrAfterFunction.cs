@@ -66,7 +66,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Sparql.String
             if (input.Value.Contains(starts.Value))
             {
                 // TODO This won't match the possibly user defined culture
-                int startIndex = input.Value.IndexOf(starts.Value, StringComparison.InvariantCulture) + starts.Value.Length;
+                var startIndex = Options.DefaultCulture.CompareInfo.IndexOf(input.Value, starts.Value);
                 string resultValue = (startIndex >= input.Value.Length ? string.Empty : input.Value.Substring(startIndex));
 
                 if (input.HasLanguage)

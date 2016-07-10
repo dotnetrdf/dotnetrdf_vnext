@@ -61,7 +61,7 @@ namespace VDS.RDF.Query.Expressions.Functions.XPath.String
             if (stringLit.Value.Contains(arg.Value))
             {
                 // TODO This won't match the possibly user defined culture
-                string result = stringLit.Value.Substring(stringLit.Value.IndexOf(arg.Value, StringComparison.InvariantCulture) + arg.Value.Length);
+                var result = stringLit.Value.Substring(Options.DefaultCulture.CompareInfo.IndexOf(stringLit.Value, arg.Value) + arg.Value.Length);
                 return new StringNode(result, UriFactory.Create(XmlSpecsHelper.XmlSchemaDataTypeString));
             }
             //If it doesn't contain the search string the empty string is returned
