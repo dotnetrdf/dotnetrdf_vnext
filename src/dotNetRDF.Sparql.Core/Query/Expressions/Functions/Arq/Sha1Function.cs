@@ -40,7 +40,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Arq
         /// </summary>
         /// <param name="expr">Expression</param>
         public Sha1Function(IExpression expr)
-            : base(expr, new SHA1Managed()) { }
+            : base(expr, SHA1.Create()) { }
 
         public override IExpression Copy(IExpression argument)
         {

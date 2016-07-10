@@ -40,7 +40,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Leviathan.Hash
         /// </summary>
         /// <param name="expr">Expression</param>
         public Sha256HashFunction(IExpression expr)
-            : base(expr, new SHA256Managed()) { }
+            : base(expr, SHA256.Create()) { }
 
         public override IExpression Copy(IExpression argument)
         {

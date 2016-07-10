@@ -39,7 +39,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Sparql.Hash
         /// </summary>
         /// <param name="expr">Argument Expression</param>
         public Sha1HashFunction(IExpression expr)
-            : base(expr, new SHA1Managed()) { }
+            : base(expr, SHA1.Create()) { }
 
         public override IExpression Copy(IExpression argument)
         {
