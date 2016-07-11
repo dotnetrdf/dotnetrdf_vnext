@@ -37,7 +37,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
 
             IAlgebra algebra = compiler.Compile(query);
             Console.WriteLine(algebra.ToString());
@@ -52,7 +52,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.WhereClause = new TripleBlockElement(Enumerable.Empty<Triple>());
 
             IAlgebra algebra = compiler.Compile(query);
@@ -68,7 +68,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             query.WhereClause = new TripleBlockElement(t.AsEnumerable());
 
@@ -86,7 +86,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.WhereClause = new PathBlockElement(Enumerable.Empty<TriplePath>());
 
             IAlgebra algebra = compiler.Compile(query);
@@ -102,7 +102,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             query.WhereClause = new PathBlockElement(new TriplePath(t).AsEnumerable());
 
@@ -120,7 +120,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             query.WhereClause = new PathBlockElement(new TriplePath[] { new TriplePath(t), new TriplePath(t.Subject, new InversePath(new Property(t.Predicate)), t.Object) });
 
@@ -145,7 +145,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             INode seqA = new UriNode(new Uri("http://a"));
             INode seqB = new UriNode(new Uri("http://b"));
@@ -178,7 +178,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             IElement triples = new TripleBlockElement(t.AsEnumerable());
 
@@ -199,7 +199,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t1 = new Triple(new VariableNode("a"), new VariableNode("b"), new VariableNode("c"));
             Triple t2 = new Triple(new VariableNode("d"), new VariableNode("e"), new VariableNode("f"));
             Triple t3 = new Triple(new VariableNode("g"), new VariableNode("h"), new VariableNode("i"));
@@ -240,7 +240,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults(Enumerable.Empty<String>(), Enumerable.Empty<IMutableResultRow>());
             query.WhereClause = new DataElement(data);
 
@@ -257,7 +257,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults("x".AsEnumerable(), Enumerable.Empty<IMutableResultRow>());
             data.Add(new MutableResultRow("x".AsEnumerable(), new Dictionary<string, INode> {{"x", 1.ToLiteral(this.NodeFactory)}}));
             query.WhereClause = new DataElement(data);
@@ -279,7 +279,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults(new String[] {"x", "y"}, Enumerable.Empty<IMutableResultRow>());
             data.Add(new MutableResultRow("x".AsEnumerable(), new Dictionary<string, INode> {{"x", 1.ToLiteral(this.NodeFactory)}}));
             data.Add(new MutableResultRow("y".AsEnumerable(), new Dictionary<string, INode> {{"y", 2.ToLiteral(this.NodeFactory)}}));
@@ -305,7 +305,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults("x".AsEnumerable(), Enumerable.Empty<IMutableResultRow>());
             data.Add(new MutableResultRow("x".AsEnumerable(), new Dictionary<string, INode> {{"x", 1.ToLiteral(this.NodeFactory)}}));
             query.ValuesClause = data;
@@ -327,7 +327,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults(new String[] {"x", "y"}, Enumerable.Empty<IMutableResultRow>());
             data.Add(new MutableResultRow("x".AsEnumerable(), new Dictionary<string, INode> {{"x", 1.ToLiteral(this.NodeFactory)}}));
             data.Add(new MutableResultRow("y".AsEnumerable(), new Dictionary<string, INode> {{"y", 2.ToLiteral(this.NodeFactory)}}));
@@ -353,7 +353,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IMutableTabularResults data = new MutableTabularResults(Enumerable.Empty<String>(), Enumerable.Empty<IMutableResultRow>());
             query.ValuesClause = data;
 
@@ -375,7 +375,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.Limit = limit;
             Assert.True(limit >= 0L ? query.HasLimit : !query.HasLimit);
 
@@ -408,7 +408,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.Offset = offset;
             Assert.True(offset > 0L ? query.HasOffset : !query.HasOffset);
 
@@ -445,7 +445,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.Limit = limit;
             query.Offset = offset;
             Assert.True(limit >= 0L ? query.HasLimit : !query.HasLimit);
@@ -477,7 +477,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = type;
 
             IAlgebra algebra = compiler.Compile(query);
@@ -492,7 +492,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = type;
 
             IAlgebra algebra = compiler.Compile(query);
@@ -508,7 +508,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Uri endpointUri = new Uri(endpoint);
             query.WhereClause = new ServiceElement(new TripleBlockElement(), endpointUri, silent);
 
@@ -526,7 +526,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IExpression expr = new ConstantTerm(true.ToLiteral(this.NodeFactory));
             query.WhereClause = new BindElement(new KeyValuePair<String, IExpression>("x", expr).AsEnumerable());
 
@@ -545,7 +545,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IExpression expr1 = new ConstantTerm(true.ToLiteral(this.NodeFactory));
             IExpression expr2 = new ConstantTerm(false.ToLiteral(this.NodeFactory));
             IElement[] elements =
@@ -571,7 +571,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             IExpression expr = new ConstantTerm(true.ToLiteral(this.NodeFactory));
             query.WhereClause = new FilterElement(expr.AsEnumerable());
 
@@ -589,7 +589,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             TripleBlockElement triples = new TripleBlockElement(t.AsEnumerable());
             query.WhereClause = new MinusElement(triples);
@@ -615,7 +615,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t1 = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             Triple t2 = new Triple(new VariableNode("s"), new BlankNode(Guid.NewGuid()), new LiteralNode("test"));
             TripleBlockElement matchTriples = new TripleBlockElement(t1.AsEnumerable());
@@ -644,7 +644,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             TripleBlockElement triples = new TripleBlockElement(t.AsEnumerable());
             query.WhereClause = new OptionalElement(triples);
@@ -670,7 +670,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t1 = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             Triple t2 = new Triple(new VariableNode("s"), new BlankNode(Guid.NewGuid()), new LiteralNode("test"));
             TripleBlockElement matchTriples = new TripleBlockElement(t1.AsEnumerable());
@@ -699,7 +699,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             IMutableTabularResults data = new MutableTabularResults("x".AsEnumerable(), Enumerable.Empty<IMutableResultRow>());
             data.Add(new MutableResultRow("x".AsEnumerable(), new Dictionary<string, INode> {{"x", 1.ToLiteral(this.NodeFactory)}}));
@@ -732,7 +732,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             Triple t = new Triple(new VariableNode("s"), new VariableNode("p"), new VariableNode("o"));
             TripleBlockElement tripleBlock = new TripleBlockElement(t.AsEnumerable());
 
@@ -775,9 +775,9 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = this.CreateInstance();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.AddProjectVariable("y");
-            IQuery subQuery = new Query();
+            ISparqlQuery subQuery = new SparqlQuery();
             subQuery.AddProjectVariable("x");
             query.WhereClause = new SubQueryElement(subQuery);
 
@@ -816,7 +816,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             foreach (String var in vars)
             {
                 query.AddProjectVariable(var);
@@ -839,7 +839,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.AddProjectExpression("x", new CountAllAggregate());
 
             IAlgebra algebra = compiler.Compile(query);
@@ -867,7 +867,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.AddProjectExpression("x", new CountAllAggregate());
             query.AddProjectExpression("y", new CountAllAggregate());
 
@@ -897,7 +897,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.AddProjectExpression("x", new CountAllAggregate());
             query.AddProjectExpression("y", new CountAggregate(new VariableTerm("foo")));
 
@@ -928,7 +928,7 @@ namespace VDS.RDF.Query.Compiler
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.AddProjectExpression("x", new CountAllAggregate());
             query.HavingConditions.Add(new GreaterThanExpression(new CountAllAggregate(), new ConstantTerm(new LongNode(100))));
 

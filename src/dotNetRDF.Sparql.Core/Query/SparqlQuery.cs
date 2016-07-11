@@ -37,12 +37,12 @@ using VDS.RDF.Query.Templates;
 
 namespace VDS.RDF.Query
 {
-    public class Query
-        : IQuery
+    public class SparqlQuery
+        : ISparqlQuery
     {
         private readonly List<KeyValuePair<String, IExpression>> _projections = new List<KeyValuePair<string, IExpression>>();
 
-        public Query()
+        public SparqlQuery()
         {
             this.Namespaces = new NamespaceMapper(true);
             this.DefaultGraphs = new List<INode>();
@@ -181,7 +181,7 @@ namespace VDS.RDF.Query
             }
         }
 
-        public bool Equals(IQuery other)
+        public bool Equals(ISparqlQuery other)
         {
             throw new NotImplementedException();
         }

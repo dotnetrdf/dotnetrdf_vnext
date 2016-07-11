@@ -55,7 +55,7 @@ namespace VDS.RDF.Query.Processors
 
         public virtual IEnumerable<INode> DatasetNamedGraphs { get { return Enumerable.Empty<INode>(); } } 
 
-        public IQueryResult Execute(IQuery query)
+        public IQueryResult Execute(ISparqlQuery query)
         {
             IAlgebra algebra = this.Compile(query);
             var context = CreateExecutionContext(query);
@@ -84,7 +84,7 @@ namespace VDS.RDF.Query.Processors
             }
         }
 
-        public void Execute(IQuery query, QueryCallback callback, object state)
+        public void Execute(ISparqlQuery query, QueryCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -94,7 +94,7 @@ namespace VDS.RDF.Query.Processors
         /// </summary>
         /// <param name="query">Query</param>
         /// <returns>Execution Context</returns>
-        protected virtual IExecutionContext CreateExecutionContext(IQuery query)
+        protected virtual IExecutionContext CreateExecutionContext(ISparqlQuery query)
         {
             IExecutionContext context = new QueryExecutionContext(query, this.DatasetDefaultGraphs, this.DatasetNamedGraphs);
             return context;
@@ -105,7 +105,7 @@ namespace VDS.RDF.Query.Processors
         /// </summary>
         /// <param name="query">Query</param>
         /// <returns>Algebra</returns>
-        protected virtual IAlgebra Compile(IQuery query)
+        protected virtual IAlgebra Compile(ISparqlQuery query)
         {
             return this.Compiler.Compile(query);
         }

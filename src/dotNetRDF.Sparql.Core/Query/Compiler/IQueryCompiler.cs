@@ -32,6 +32,6 @@ namespace VDS.RDF.Query.Compiler
     /// </summary>
     public interface IQueryCompiler
     {
-        IAlgebra Compile(IQuery query);
+        IAlgebra Compile(ISparqlQuery query);
     }
 }

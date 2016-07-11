@@ -46,7 +46,7 @@ namespace VDS.RDF.Query.Processors
         /// </summary>
         /// <param name="query">Query</param>
         /// <returns>Query Result</returns>
-        IQueryResult Execute(IQuery query);
+        IQueryResult Execute(ISparqlQuery query);
 
         /// <summary>
         /// Executes the given query asynchronously
@@ -54,6 +54,6 @@ namespace VDS.RDF.Query.Processors
         /// <param name="query">Query</param>
         /// <param name="callback">Callback for when the query completes</param>
         /// <param name="state">State to be passed to the callback</param>
-        void Execute(IQuery query, QueryCallback callback, Object state);
+        void Execute(ISparqlQuery query, QueryCallback callback, Object state);
     }
 }

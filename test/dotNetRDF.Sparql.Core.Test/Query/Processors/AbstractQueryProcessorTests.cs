@@ -51,7 +51,7 @@ namespace VDS.RDF.Query.Processors
         [Fact]
         public void QueryProcessorAskEmptyWhere()
         {
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Ask;
 
             IQueryProcessor processor = CreateProcessor(CreateGraph());
@@ -67,7 +67,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Ask;
             INode noSuchThing = g.CreateUriNode(":nosuchthing");
             Triple t = new Triple(noSuchThing, noSuchThing, noSuchThing);
@@ -86,7 +86,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Ask;
             Triple t = new Triple(g.CreateVariableNode("s"), g.CreateVariableNode("p"), g.CreateVariableNode("o"));
             query.WhereClause = new TripleBlockElement(t.AsEnumerable());
@@ -104,7 +104,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Ask;
             Triple t = g.Triples.FirstOrDefault(x => x.IsGround);
             Assert.NotNull(t);
@@ -121,7 +121,7 @@ namespace VDS.RDF.Query.Processors
         [Fact]
         public void QueryProcessorSelectEmptyWhere()
         {
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.SelectAll;
 
             IQueryProcessor processor = CreateProcessor(CreateGraph());
@@ -140,7 +140,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.SelectAll;
             INode noSuchThing = g.CreateUriNode(":nosuchthing");
             Triple t = new Triple(noSuchThing, noSuchThing, noSuchThing);
@@ -159,7 +159,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.SelectAll;
             Triple t = new Triple(g.CreateVariableNode("s"), g.CreateVariableNode("p"), g.CreateVariableNode("o"));
             query.WhereClause = new TripleBlockElement(t.AsEnumerable());
@@ -179,7 +179,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = CreateGraph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.SelectAll;
             Triple t = g.Triples.FirstOrDefault(x => x.IsGround);
             Assert.NotNull(t);
@@ -201,7 +201,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.AddProjectVariable("x");
 
@@ -231,7 +231,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.AddProjectVariable("x");
 
@@ -275,7 +275,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.SortConditions = new ISortCondition[] { new SortCondition(new VariableTerm("x")) };
 
@@ -309,7 +309,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.SortConditions = new ISortCondition[] { new SortCondition(new VariableTerm("x"), false) };
 
@@ -343,7 +343,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.AddProjectVariable("x");
             query.AddProjectExpression("count", new CountAllAggregate());
@@ -389,7 +389,7 @@ namespace VDS.RDF.Query.Processors
         {
             IGraph g = new Graph();
 
-            IQuery query = new Query();
+            ISparqlQuery query = new SparqlQuery();
             query.QueryType = QueryType.Select;
             query.AddProjectVariable("x");
             query.AddProjectExpression("sample", new SampleAggregate(new VariableTerm("y")));

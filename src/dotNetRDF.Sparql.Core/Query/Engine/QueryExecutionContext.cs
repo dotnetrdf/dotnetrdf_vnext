@@ -63,7 +63,7 @@ namespace VDS.RDF.Query.Engine
         /// <param name="query">Query</param>
         /// <param name="datasetDefaultGraphs">Dataset Default Graphs, used only if the query does not specify a dataset</param>
         /// <param name="datasetNamedGraphs">Dataset Named Graphs, used only if the query does not specify a dataset</param>
-        public QueryExecutionContext(IQuery query, IEnumerable<INode> datasetDefaultGraphs, IEnumerable<INode> datasetNamedGraphs)
+        public QueryExecutionContext(ISparqlQuery query, IEnumerable<INode> datasetDefaultGraphs, IEnumerable<INode> datasetNamedGraphs)
         {
             if (query == null) throw new ArgumentNullException("query");
 

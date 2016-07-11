@@ -31,13 +31,13 @@ namespace VDS.RDF.Query.Elements
     public class SubQueryElement
         : IElement
     {
-        public SubQueryElement(IQuery query)
+        public SubQueryElement(ISparqlQuery query)
         {
             if (query == null) throw new ArgumentNullException("query");
             this.SubQuery = query;
         }
 
-        public IQuery SubQuery { get; set; }
+        public ISparqlQuery SubQuery { get; set; }
 
         public bool Equals(IElement other)
         {

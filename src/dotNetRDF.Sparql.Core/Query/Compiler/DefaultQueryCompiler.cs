@@ -37,7 +37,7 @@ namespace VDS.RDF.Query.Compiler
     public class DefaultQueryCompiler
         : IQueryCompiler
     {
-        public virtual IAlgebra Compile(IQuery query)
+        public virtual IAlgebra Compile(ISparqlQuery query)
         {
             IAlgebra algebra;
 
