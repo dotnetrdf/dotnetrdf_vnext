@@ -28,12 +28,12 @@ namespace VDS.RDF.Collections
             {
                 T expectedItem = expectedEnumerator.Current;
                 i++;
-                if (!actualEnumerator.MoveNext()) Assert.Fail(String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
+                Assert.True(actualEnumerator.MoveNext(), String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
                 T actualItem = actualEnumerator.Current;
 
-                Assert.Equal(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
+                Assert.True(actualItem.Equals(expectedItem), String.Format("Enumerators mismatched at Item {0}", i));
             }
-            if (actualEnumerator.MoveNext()) Assert.Fail("Actual enumerator has additional unexpected items");
+            Assert.False(actualEnumerator.MoveNext(), "Actual enumerator has additional unexpected items");
         }
 
         public static void CheckStruct<T>(IEnumerable<T> expected, IEnumerable<T> actual) where T : struct
@@ -55,12 +55,12 @@ namespace VDS.RDF.Collections
             {
                 T expectedItem = expectedEnumerator.Current;
                 i++;
-                if (!actualEnumerator.MoveNext()) Assert.Fail(String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
+                Assert.True(actualEnumerator.MoveNext(), String.Format("Actual enumerator was exhaused at Item {0} when next Item {1} was expected", i, expectedItem));
                 T actualItem = actualEnumerator.Current;
 
-                Assert.Equal(expectedItem, actualItem, String.Format("Enumerators mismatched at Item {0}", i));
+                Assert.True(actualItem.Equals(expectedItem), String.Format("Enumerators mismatched at Item {0}", i));
             }
-            if (actualEnumerator.MoveNext()) Assert.Fail("Actual enumerator has additional unexpected items");
+            Assert.False(actualEnumerator.MoveNext(), "Actual enumerator has additional unexpected items");
         }
 
         private static void Exhaust<T>(IEnumerator<T> enumerator)
@@ -88,76 +88,100 @@ namespace VDS.RDF.Collections
             new object[] { 1, 100, 1000 }
         };
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorBeforeFirstElement1()
         {
             IEnumerable<int> data = Enumerable.Range(1, 10);
             IEnumerator<int> enumerator =  new LongTakeEnumerator<int>(data.GetEnumerator(), 1);
-            int i = enumerator.Current;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                int i = enumerator.Current;
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorBeforeFirstElement2()
         {
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongTakeEnumerator<String>(data.GetEnumerator(), 1);
-            String i = enumerator.Current;
-            Assert.Equal(default(String), i);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                String i = enumerator.Current;
+                Assert.Equal(default(String), i);
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorBeforeFirstElement3()
         {
             IEnumerable<int> data = Enumerable.Range(1, 10);
             IEnumerator<int> enumerator = new LongSkipEnumerator<int>(data.GetEnumerator(), 1);
-            int i = enumerator.Current;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                int i = enumerator.Current;
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorBeforeFirstElement4()
         {
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongSkipEnumerator<String>(data.GetEnumerator(), 1);
-            String i = enumerator.Current;
-            Assert.Equal(default(String), i);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                String i = enumerator.Current;
+                Assert.Equal(default(String), i);
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorAfterLastElement1()
         {
             IEnumerable<int> data = Enumerable.Range(1, 10);
             IEnumerator<int> enumerator = new LongTakeEnumerator<int>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
-            int i = enumerator.Current;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                int i = enumerator.Current;
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorAfterLastElement2()
         {
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongTakeEnumerator<String>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
-            String i = enumerator.Current;
-            Assert.Equal(default(String), i);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                String i = enumerator.Current;
+                Assert.Equal(default(String), i);
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorAfterLastElement3()
         {
             IEnumerable<int> data = Enumerable.Range(1, 10);
             IEnumerator<int> enumerator = new LongSkipEnumerator<int>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
-            int i = enumerator.Current;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                int i = enumerator.Current;
+            });
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EnumeratorAfterLastElement4()
         {
             IEnumerable<String> data = new String[] { "a", "b", "c" };
             IEnumerator<String> enumerator = new LongSkipEnumerator<String>(data.GetEnumerator(), 1);
             Exhaust(enumerator);
-            String i = enumerator.Current;
-            Assert.Equal(default(String), i);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                String i = enumerator.Current;
+                Assert.Equal(default(String), i);
+            });
         }
             
         [Theory, MemberData("SkipAndTakeData")]

@@ -8,7 +8,6 @@ using VDS.RDF.Query.Expressions.Primary;
 
 namespace VDS.RDF.Query.Expressions.Aggregates
 {
-    [TestFixture]
     public class AggregateComparisonTests
     {
         private void TestEquals(params IAggregateExpression[] aggs)
@@ -16,8 +15,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             // Should be equal to itself
             foreach (IAggregateExpression agg in aggs)
             {
-                Assert.Equal(agg, agg, "Should be equal to self");
-                Assert.Equal(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
+                Assert.Equal(agg, agg);
+                Assert.Equal(agg.GetHashCode(), agg.GetHashCode());
             }
 
             // Should be equal to all others
@@ -28,8 +27,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
                 {
                     if (i == j) continue;
 
-                    Assert.Equal(agg, aggs[j], "Should be equal to other aggregates");
-                    Assert.Equal(agg.GetHashCode(), aggs[j].GetHashCode(), "Should have same hash code as other aggregates");
+                    Assert.Equal(agg, aggs[j]);
+                    Assert.Equal(agg.GetHashCode(), aggs[j].GetHashCode());
                 }
             }
         }
@@ -39,8 +38,8 @@ namespace VDS.RDF.Query.Expressions.Aggregates
             // Should be equal to itself
             foreach (IAggregateExpression agg in aggs)
             {
-                Assert.Equal(agg, agg, "Should be equal to self");
-                Assert.Equal(agg.GetHashCode(), agg.GetHashCode(), "Should have same hash code as self");
+                Assert.Equal(agg, agg);
+                Assert.Equal(agg.GetHashCode(), agg.GetHashCode());
             }
 
             // Should not be equal to all others
@@ -51,7 +50,7 @@ namespace VDS.RDF.Query.Expressions.Aggregates
                 {
                     if (i == j) continue;
 
-                    Assert.NotEqual(agg, aggs[j], "Should not be equal to other aggregates");
+                    Assert.NotEqual(agg, aggs[j]);
                 }
             }
         }
