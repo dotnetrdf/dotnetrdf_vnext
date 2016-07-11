@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
 using VDS.RDF.Parsing.Handlers;
+using VDS.RDF.Graphs;
 using VDS.RDF.Query;
 
 namespace VDS.RDF.Parsing.Contexts
@@ -47,14 +48,6 @@ namespace VDS.RDF.Parsing.Contexts
             if (g == null) throw new ArgumentNullException("g");
             this._g = g;
         }
-
-        /// <summary>
-        /// Creates a new Parser Context
-        /// </summary>
-        /// <param name="g">Graph to parse from</param>
-        /// <param name="results">Results Handler</param>
-        public SparqlRdfParserContext(IGraph g, SparqlResultSet results)
-            : this(g, new ResultSetHandler(results)) { }
 
         /// <summary>
         /// Gets the Graph being parsed from
