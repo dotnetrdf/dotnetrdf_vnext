@@ -46,7 +46,10 @@ namespace VDS.RDF.Parsing.Suites
             IGraph actual = new Graph();
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                this.Parser.Load(new GraphHandler(actual), new StreamReader(stream), new ParserProfile(BaseUri));
+                using (var reader = new StreamReader(stream))
+                {
+                    this.Parser.Load(new GraphHandler(actual), reader, new ParserProfile(BaseUri));
+                }
             }
             return actual;
         }

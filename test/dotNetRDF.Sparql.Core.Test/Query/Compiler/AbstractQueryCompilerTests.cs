@@ -798,10 +798,21 @@ namespace VDS.RDF.Query.Compiler
             Assert.True(table.IsUnit);
         }
 
-        [Theory, InlineData("x"),
-         InlineData("x", "y"),
-         InlineData("x", "y", "z")]
-        public void QueryCompilerProject(params String[] vars)
+        public static IEnumerable<object[]> TestVars
+        {
+            get
+            {
+                return new []
+                {
+                    new object[] {new string[] {"x"} },
+                    new object[] {new string[] { "x", "y"} },
+                    new object[] {new string[] { "x", "y", "z"} }
+                };
+            }
+        }
+
+        [Theory, MemberData("TestVars")]
+        public void QueryCompilerProject(String[] vars)
         {
             IQueryCompiler compiler = new DefaultQueryCompiler();
 
