@@ -3,7 +3,7 @@
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "dotNetRDF.Core": "2.0.0",
-    "dotNetRDF.IO.Core": "2.0.0",
+    "dotNetRDF.Sparql.Core": "2.0.0",
     "VDS.Common": "2.0.0"
   },
   "frameworks": {
